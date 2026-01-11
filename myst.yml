@@ -1,0 +1,43 @@
+# See docs at: https://mystmd.org/guide/frontmatter
+version: 1
+project:
+  id: 49a85723-ade0-4c88-9664-f55d03cd55c8
+  title: An Introduction to Microcontrollers and Programming with MicroPython
+  
+  description: Lecture notes from CS-141 at St. Lawrence University for basic microcontroller programming using MicroPython on the Adafruit Circuit Playground Express.
+  keywords: 
+    - microcontroller
+    - micropython
+    - programming
+    - computer science
+    - embedded systems
+    - ESP32
+    - cs141
+  authors: 
+    - name: Kevin Angstadt
+      orcid: 0000-0002-0104-5257
+      email: kangstadt@stlawu.edu
+      affiliations: 
+        - institution: St. Lawrence University
+          department: Math, Computer Science & Statistics
+      url: https://myslu.stlawu.edu/~kangstadt
+      github: kevinaangstadt
+  # There is no way to disable the edit button otherwise
+  # github: https://github.com/kevinaangstadt/cs141
+  license:
+    content: CC-BY-SA-4.0
+    code: BSD-3-Clause
+  copyright: "2026 Kevin Angstadt"
+  # To autogenerate a Table of Contents, run "jupyter book init --write-toc"
+
+extends:
+  - toc.yml
+
+site:
+  template: book-theme
+  parts:
+    primary_sidebar_footer: ./style/primary-sidebar-footer.md
+  options:
+      logo_text: Intro to Microcontrollers
+  #   favicon: favicon.ico
+  #   logo: site_logo.png
