@@ -3,3 +3,4 @@ project:
   toc:
     - file: index.md
     - file: 0-introduction.md
+    - file: glossary.md
