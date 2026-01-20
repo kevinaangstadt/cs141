@@ -18,10 +18,17 @@ project:
       orcid: 0000-0002-0104-5257
       email: kangstadt@stlawu.edu
       affiliations: 
-        - institution: St. Lawrence University
+        - id: stlawu
+          institution: St. Lawrence University
           department: Math, Computer Science & Statistics
       url: https://myslu.stlawu.edu/~kangstadt
       github: kevinaangstadt
+    - name: Ed Harcourt
+      email: edharcourt@stlawu.edu
+      affiliation: stlawu
+      url: https://myslu.stlawu.edu/~ehar
+      github: edharcourt
+
   # There is no way to disable the edit button otherwise
   # github: https://github.com/kevinaangstadt/cs141
   license:

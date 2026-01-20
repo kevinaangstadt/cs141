@@ -3,4 +3,5 @@ project:
   toc:
     - file: index.md
     - file: 0-introduction.md
+    - file: 1-hello-world-datatypes.md
     - file: glossary.md
