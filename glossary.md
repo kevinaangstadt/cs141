@@ -32,6 +32,9 @@ constant
 digital
 : uses discrete (rather than continuous) values. In the context of computers, this is often binary
 
+diode
+: an electronic component that allows current to flow in only one direction
+
 embedded system
 : a combined computer system containing a processor, memory, and input/output that is part of a larger mechanical or electronic system
 
@@ -44,11 +47,20 @@ general-purpose input/output (GPIO)
 integer
 : a whole number (i.e., no decimal point)
 
+library
+: a collection of pre-written code (functions, variables, etc.) that can be used to perform common tasks in a programming language
+
 microcontroller
 : a small computer contained in a single integrated circuit that combines a processor, memory, input, and output
 
+module
+: a file containing Python code (functions, variables, etc.) that can be imported and used
+
 operating system
 : software that manages computer hardware and software resources and provides common services for computer programs. Common examples include Windows, macOS, Linux, iOS, and Android
+
+resistor
+: an electronic component that limits the flow of electrical current in a circuit
 
 statement
 : a complete instruction in a programming language that tells the computer to perform a specific action
