@@ -76,7 +76,7 @@ low-cost and use little power, making them ideal for battery-powered devices.
 @fig-microcontrollers shows a collection of different microcontroller chips
 on development boards. Common microcontrollers include Atmel's AVR series (used
 in Arduino boards), Microchip's PIC series, ESP32 series from Espressif, and
-Raspberry Pi Piocs.
+Raspberry Pi Picos.
 
 Microcontrollers also need to interface with the outside world through sensors
 (e.g., temperators sensors, buttons, light sensors, accelorometers, etc.) and
