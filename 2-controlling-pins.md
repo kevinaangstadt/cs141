@@ -158,6 +158,17 @@ We would typically round this up to the nearest standard resistor value, which i
 220Ω.
 :::
 
+:::{exercise}
+:label: ex-led-resistor-2
+An LED has a forward voltage of 1.8V and a maximum current of 10mA (0.01A). If
+the microcontroller pin outputs 5V when turned on, what value of current-limiting
+resistor is needed to safely operate the LED?
+:::
+:::{solution} ex-led-resistor-2
+:class: dropdown
+$ R = \frac{V_{resistor}}{I} = \frac{5V - 1.8V}{0.01A} = \frac{3.2V}{0.01A} = 320\Omega $
+:::
+
 ## Wiring up the Circuit
 We will make use of a *breadboard* to build our circuit. Breadboards are used to
 prototype circuits without soldering. They have a series of holes that are
@@ -251,4 +262,19 @@ led.on()  # Turn the LED on
 input("Press Enter to turn off the LED...")  # Wait for user input
 led.off()  # Turn the LED off
 ```
+:::
+
+:::{exercise} 
+:label: sos-morse-code 
+
+*Morse code* is a method used in telecommunication to transmit letters using
+*dots* and *dashes*. A dot is a short signal, while a dash is a longer signal.
+We can translate this to short and long LED blinks.
+
+Write a morse code program that blinks out the SOS distress signal: three dots, three
+dashes, and three dots (i.e., `...---...`). Use a blink of 0.2 seconds for a dot,
+0.6 seconds for a dash, and 0.2 seconds between each blink. There should be a pause
+of 0.6 seconds between the letters.
+
+We leave the implementation up to you!
 :::
