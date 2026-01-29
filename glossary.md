@@ -40,11 +40,20 @@ digital
 diode
 : an electronic component that allows current to flow in only one direction
 
+duty cycle
+: the percentage of one cycle in which a signal or system is active. In the context of square waves, it represents the proportion of time the signal is high (active) compared to the total duration of the wave.
+
 embedded system
 : a combined computer system containing a processor, memory, and input/output that is part of a larger mechanical or electronic system
 
 floating-point
 : a number that has a decimal point
+
+frame rate
+: the frequency at which consecutive images (frames) appear on a display or the human brain processes visual information, typically measured in frames per second (FPS)
+
+frequency
+: the number of occurrences of a repeating event per unit of time, typically measured in hertz (Hz)
 
 general-purpose input/output (GPIO)
 : configurable pins on a microcontroller that can be used for various input and output functions to interface with sensors and actuators
@@ -64,8 +73,17 @@ module
 operating system
 : software that manages computer hardware and software resources and provides common services for computer programs. Common examples include Windows, macOS, Linux, iOS, and Android
 
+period
+: the duration of one complete cycle of a repeating event, typically measured in seconds. It is the reciprocal of frequency.
+
+pulse-width modulation (PWM)
+: a technique for varying the duty cycle of a digital signal to encode information
+
 resistor
 : an electronic component that limits the flow of electrical current in a circuit
+
+square wave
+: a type of waveform that alternates between two levels (high and low) with a sudden transition between them, creating a square-like shape when plotted on a graph
 
 statement
 : a complete instruction in a programming language that tells the computer to perform a specific action

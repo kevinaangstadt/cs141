@@ -169,6 +169,7 @@ resistor is needed to safely operate the LED?
 $ R = \frac{V_{resistor}}{I} = \frac{5V - 1.8V}{0.01A} = \frac{3.2V}{0.01A} = 320\Omega $
 :::
 
+(sec-wiring-up-led-circuit)=
 ### Wiring up the Circuit
 We will make use of a *breadboard* to build our circuit. Breadboards are used to
 prototype circuits without soldering. They have a series of holes that are
@@ -264,7 +265,234 @@ led.off()  # Turn the LED off
 ```
 :::
 
+## Programmatically Dimming an LED
+What if we wanted to make the LED dimmer instead of just fully on or fully off?
+One possibility would be to change the value of the current-limiting resistor to
+a higher value. However, this would require physically changing the resistor in
+the circuit each time we wanted to change the brightness of the LED. There are
+also *variable* resistors (also called potentiometers) that can be adjusted, but
+again this would require manual adjustment.
+
+If we want to do this with software, we have to think about LED brightness
+differently. The human eye is relatively slow to respond to changes in light.
+Our brains only process visual information about 24-60 times per second. This is
+called a {term}`frame rate`. If something happens faster than this, our brains
+will blur it together. Thus, if we turn the LED on and off quickly enough, our
+brains will perceive it as being dimmer than if the LED were on all the time.
+
+The less time the LED is on, the dimmer it will appear. We can represent these
+on vs. off times by making a graph of voltage over time. The LED will be on when
+the voltage is high, and off when the voltage is low. Because a microcontroller
+pin is either on or off, we will have rapid transitions between high and low
+voltage, thus producing a {term}`square wave`.
+
+### Square Waves, Frequency, Period, and Duty Cycle
+
+@fig-square-wave shows two square waves. An important measure on any signal is
+its {term}`frequency`, which is how often the signal repeats in a second.
+Frequency is measured in Cycles per second or Hertz (Hz). 
+
+We can also measure the time it takes for one complete cycle of the wave to
+occur. This is called the {term}`period` of the wave. Frequency and period are
+inversely related: $$ \text{Frequency (Hz)} = \frac{1}{\text{Period (seconds)}} $$
+
+:::{exercise}
+:label: ex-frequency-period
+If a square wave has a period of 0.02 seconds, what is its frequency in Hertz (Hz)?
+:::
+:::{solution} ex-frequency-period
+:class: dropdown
+Using the formula: $$ 
+\begin{aligned}
+\text{Frequency (Hz)} &= \frac{1}{\text{Period (seconds)}} \\ 
+\text{Frequency (Hz)} &= \frac{1}{0.02 \text{ seconds}} = 50 \text{ Hz} 
+\end{aligned}$$
+:::
+
+:::{exercise}
+:label: ex-period-frequency
+If a square wave has a frequency of 250 Hz, what is its period in seconds?
+:::
+:::{solution} ex-period-frequency
+:class: dropdown
+Using the formula: $$
+\begin{aligned}
+\text{Period (seconds)} &= \frac{1}{\text{Frequency (Hz)}} \\ 
+\text{Period (seconds)} &= \frac{1}{250 \text{Hz}} = 0.004 \text{ seconds} 
+\end{aligned}$$ 
+:::
+
+
+In this case, both signals have the same frequency and period because they
+repeat at the same rate. However, the amount of time the signal is high vs. low
+is different. This is called the {term}`duty cycle` of the signal. If the signal
+is high for half the time and low for half the time, it has a 50% duty cycle (as
+in fig-square-wave-50). If the signal is high for only 15% of the time and low
+for 85% of the time, it has a 15% duty cycle (as in fig-square-wave-15). The
+lower the duty cycle, the dimmer the LED will appear.
+
+```{figure}
+:label: fig-square-wave
+:align: left
+
+(fig-square-wave-50)=
+![A square wave where the voltage is high for half the time and low for half the time (50% duty cycle)](./img/fig-square-wave-50-percent-duty.png)
+
+(fig-square-wave-15)=
+![A square wave where the voltage is high for 15% of the time and low for 85% of the time (15% duty cycle)](./img/fig-square-wave-15-percent-duty.png)
+
+Both of these square waves have the same frequency (i.e., they repeat at the same rate), but one will produce a higher brightness than the other.
+```
+
+:::{exercise}
+:label: ex-square-wave-duty-cycle
+Which of the two square waves in @fig-square-wave will produce a dimmer LED?
+:::
+:::{solution} ex-square-wave-duty-cycle
+:class: dropdown
+The square wave in (fig-square-wave-15) with a 15% duty cycle will
+produce a dimmer LED because the LED is on for a smaller portion of the time.
+:::
+
+### Pulse-Width Modulation (PWM)
+Each peek on the square wave represents a *pulse* of voltage to the LED. In
+@fig-square-wave, the only difference between the two square waves is the
+*width* of the pulse. Thus, if we vary (or *modulate*) the width of the pulse,
+we can change the brightness of the LED. This technique is called
+{term}`pulse-width modulation (PWM)`. PWM is meant to encode information in the
+width of the pulses. In our case, this information is the brightness of the LED.
+In other applications (such as remote controls), PWM can be used to encode data
+such as the position of a joystick or button presses.
+
+:::{exercise}
+:label: ex-pwm-duty-cycle-time
+If we have a PWM signal with a frequency of 500 Hz, and a duty cycle of 20%, how long is the pulse high in each cycle (in milliseconds)?
+:::
+:::{solution} ex-pwm-duty-cycle-time
+:class: dropdown
+First, we need to find the period of the signal: $$
+\begin{aligned}
+\text{Period (seconds)} &= \frac{1}{\text{Frequency (Hz)}} \\ 
+\text{Period (seconds)} &= \frac{1}{500 \text{Hz}} = 0.002 \text{ seconds} 
+\end{aligned}$$
+Next, we can find the time the pulse is high by multiplying the period by the duty cycle: $$
+\begin{aligned}
+\text{Time High (seconds)} &= \text{Period (seconds)} \times \text{Duty Cycle} \\ 
+\text{Time High (seconds)} &= 0.002 \text{ seconds} \times 0.20 = 0.0004 \text{ seconds} 
+\end{aligned}$$
+Converting to milliseconds: $$ 0.0004 \text{ seconds} \times 1000 = 0.4 \text{ milliseconds} $$
+:::
+
+### Writing the MicroPython Code to Dim the LED
+MicroPython's `machine` module includes a special class called `PWM` that
+provides functions for generating PWM signals on a pin. When we create a PWM
+object, we must pass in a Pin object to specify which pin we want to use for PWM
+output.
+
+Using the same circuit as shown in @sec-wiring-up-led-circuit, we can create a PWM
+object for the LED pin like this:
+
+```{code-block} python
+:linenos:
+import machine
+
+led_pwm = machine.PWM(machine.Pin(32))
+```
+
+We can set the frequency of the PWM signal using the `freq()` method. For
+example, to set the frequency to 1 kHz (1000 Hz):
+```{code-block} python
+:linenos:
+:lineno-start: 5
+led_pwm.freq(1000)  # Set frequency to 1 kHz
+```
+
+We can set the duty cycle of the PWM signal using the `duty()` method. The duty
+cycle is specified as a value between 0 and 1023, where 0 is 0% duty cycle
+(always off) and 1023 is 100% duty cycle (always on). For example, to set the duty
+cycle to 50%:
+
+```{code-block} python
+:linenos:
+:lineno-start: 7
+led_pwm.duty(512)  # Set duty cycle to 50%
+```
+
+The complete program to dim the LED using PWM would look like this:
+
+```{code-block} python
+:linenos:
+import machine
+
+led_pwm = machine.PWM(machine.Pin(32))
+
+led_pwm.freq(1000)  # Set frequency to 1 kHz
+
+led_pwm.duty(512)  # Set duty cycle to 50%
+``` 
+
+:::{exercise}
+:label: ex-pwm-duty-cycle
+After pausing 5 seconds, make the LED dimmer by changing the duty cycle to 25%. 
+Then after another 5 seconds, make the LED brighter by changing the duty cycle 
+to 75%.
+:::
+:::{solution} ex-pwm-duty-cycle
+:class: dropdown
+```{code-block} python
+:linenos:
+import machine
+import time
+
+led_pwm = machine.PWM(machine.Pin(32))
+
+led_pwm.freq(1000)  # Set frequency to 1 kHz
+
+led_pwm.duty(512)  # Set duty cycle to 50%
+
+# sleep for 5 seconds
+time.sleep(5)
+
+led_pwm.duty(256)  # Set duty cycle to 25% (1024*0.25)
+
+# sleep for another 5 seconds
+time.sleep(5)
+
+led_pwm.duty(768)  # Set duty cycle to 75% (1024*0.75)
+```
+:::
+
 ## Additional Exercises
+:::{exercise}
+:label: more-resistor-practice
+
+An LED has a forward voltage of 2.2V and a maximum current of 8mA (0.008A). If
+the microcontroller pin outputs 3.3V when turned on, what value of current-limiting
+resistor is needed to safely operate the LED?
+:::
+
+:::{exercise}
+:label: frequency-calculation
+
+If a square wave has a period of 0.01 seconds, what is its frequency in Hertz (Hz)?
+
+:::
+
+:::{exercise}
+:label: period-calculation
+
+If a square wave has a frequency of 1000 Hz, what is its period in seconds?
+:::
+
+:::{exercise}
+:label: pwm-time-high
+
+If we have a PWM signal with a frequency of 2KHz, and a duty cycle of 10%, how
+long is the pulse high in each cycle (in microseconds, μs)?
+
+HINT: A microsecond is one millionth of a second (1 second = 1,000,000 microseconds).
+:::
+
 :::{exercise} 
 :label: sos-morse-code 
 
@@ -279,3 +507,15 @@ of 0.6 seconds between the letters.
 
 We leave the implementation up to you!
 :::
+
+:::{exercise}
+:lablel: pwm-blink-led
+
+If we set the PWM frequency low enough, we can see the LED blinking on and off.
+Write a program that blinks the LED on for 0.5 seconds and off for 0.5 seconds
+using PWM with a frequency of 1 Hz (i.e., 1 cycle per second).
+
+What would you have to set the duty cycle to in order to achieve this?
+:::
+
+
