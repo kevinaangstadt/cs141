@@ -2,7 +2,11 @@ version: 1
 project:
   toc:
     - file: index.md
+      options:
+        numbered: false
     - file: 0-introduction.md
     - file: 1-hello-world-datatypes.md
     - file: 2-controlling-pins.md
     - file: glossary.md
+      options:
+        numbered: false

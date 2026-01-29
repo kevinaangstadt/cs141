@@ -1,3 +1,8 @@
+---
+numbering:
+    title: false
+---
+# Glossary
 ```{glossary}
 
 argument

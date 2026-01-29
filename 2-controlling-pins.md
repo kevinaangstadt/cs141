@@ -169,7 +169,7 @@ resistor is needed to safely operate the LED?
 $ R = \frac{V_{resistor}}{I} = \frac{5V - 1.8V}{0.01A} = \frac{3.2V}{0.01A} = 320\Omega $
 :::
 
-## Wiring up the Circuit
+### Wiring up the Circuit
 We will make use of a *breadboard* to build our circuit. Breadboards are used to
 prototype circuits without soldering. They have a series of holes that are
 connected together in a specific pattern. The holes are used to insert wires and
@@ -201,7 +201,7 @@ Circuit diagram showing an LED connected to a microcontroller pin through a curr
 ```
 Note that one wire is connected to GPIO pin 32 and the other is connect to ground (GND).
 
-## Writing the MicroPython Code to Control the LED
+### Writing the MicroPython Code to Control the LED
 MicroPython includes a special module called `machine` that provides functions
 and operations for controlling hardware components of the microcontroller. 
 
@@ -264,6 +264,7 @@ led.off()  # Turn the LED off
 ```
 :::
 
+## Additional Exercises
 :::{exercise} 
 :label: sos-morse-code 
 

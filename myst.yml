@@ -13,6 +13,11 @@ project:
     - embedded systems
     - ESP32
     - cs141
+  numbering:
+    title: true
+    heading_1: true
+    heading_2: true
+    heading_3: true
   authors: 
     - name: Kevin Angstadt
       orcid: 0000-0002-0104-5257

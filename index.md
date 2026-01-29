@@ -1,3 +1,7 @@
+---
+numbering:
+    title: false
+---
 # An Introduction to Microcontrollers and Programming in MicroPython
 
 This website contains readings for CS-141 Introduction to Microcontrollers
