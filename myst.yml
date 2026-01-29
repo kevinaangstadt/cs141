@@ -13,6 +13,8 @@ project:
     - embedded systems
     - ESP32
     - cs141
+  exclude:
+    - support_code/**
   numbering:
     title: true
     heading_1: true
