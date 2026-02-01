@@ -197,7 +197,7 @@ Wire up the circuit as shown in @fig-led-circuit.
 :alt: Circuit diagram showing an LED connected to a microcontroller pin through a current-limiting resistor
 :align: center  
 
-Circuit diagram showing an LED connected to a microcontroller pin through a current-limiting resistor
+Circuit diagram showing an LED connected to a microcontroller pin through a current-limiting resistor. This image was created using [Fritzing](http://fritzing.org/).
 
 ```
 Note that one wire is connected to GPIO pin 32 and the other is connect to ground (GND).
