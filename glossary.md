@@ -55,14 +55,24 @@ frame rate
 frequency
 : the number of occurrences of a repeating event per unit of time, typically measured in hertz (Hz)
 
+function
+: a named block of code that performs a specific task and can be called (invoked) from other parts of a program
+: a mathematical relation that maps inputs (arguments) in a domain set to outputs (return values) in a range set
+
 general-purpose input/output (GPIO)
 : configurable pins on a microcontroller that can be used for various input and output functions to interface with sensors and actuators
+
+global variable
+: a variable that is defined outside of any function and can be accessed from anywhere in the program
 
 integer
 : a whole number (i.e., no decimal point)
 
 library
 : a collection of pre-written code (functions, variables, etc.) that can be used to perform common tasks in a programming language
+
+local variable
+: a variable that is defined within a function and can only be accessed inside that function
 
 microcontroller
 : a small computer contained in a single integrated circuit that combines a processor, memory, input, and output
@@ -73,6 +83,9 @@ module
 operating system
 : software that manages computer hardware and software resources and provides common services for computer programs. Common examples include Windows, macOS, Linux, iOS, and Android
 
+parameter
+: a named variable in a function definition that stores the value of an argument passed to the function when it is called
+
 period
 : the duration of one complete cycle of a repeating event, typically measured in seconds. It is the reciprocal of frequency.
 
@@ -81,6 +94,9 @@ pulse-width modulation (PWM)
 
 resistor
 : an electronic component that limits the flow of electrical current in a circuit
+
+scope
+: the region of a program where a variable can be accessed or used
 
 square wave
 : a type of waveform that alternates between two levels (high and low) with a sudden transition between them, creating a square-like shape when plotted on a graph
