@@ -186,7 +186,7 @@ of terminal strips to allow for DIPs to be inserted.
 Items you will need:
 - ESP32 board
 - Red LED (note that the longer leg is the anode (+))
-- 200Ω resistor
+- 220Ω resistor
 - Breadboard
 - Jumper wires (x2)
 
