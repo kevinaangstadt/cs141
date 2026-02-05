@@ -8,6 +8,7 @@ project:
     - file: 1-hello-world-datatypes.md
     - file: 2-controlling-pins.md
     - file: 3-functions.md
+    - file: 4-parallel-serial.md
     - file: glossary.md
       options:
         numbered: false
