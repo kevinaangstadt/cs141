@@ -1,0 +1,135 @@
+<svg width="500" height="420" xmlns="http://www.w3.org/2000/svg">
+  <rect width="100%" height="100%" fill="#ffffff" />
+  
+  <rect x="200" y="20" width="100" height="340" rx="4" fill="#2d2d2d" />
+  
+  <circle cx="215" cy="40" r="6" fill="#1a1a1a" />
+  
+  <text x="250" y="190" font-family="Arial" font-size="28" fill="#d1d1d1" text-anchor="middle" dominant-baseline="middle" transform="rotate(90, 250, 190)" font-weight="bold" letter-spacing="3">74HC595</text>
+
+  <g font-family="Arial" font-size="12" font-weight="bold">
+    
+    <g transform="translate(0, 45)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">B</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">1</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 83)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">C</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">2</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 121)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">D</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">3</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 159)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">E</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">4</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 197)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">F</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">5</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 235)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">G</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">6</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 273)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="57" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">H</tspan></text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">7</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(0, 311)">
+      <rect x="35" y="0" width="45" height="20" rx="3" fill="#333" /><text x="57" y="14" fill="white" text-anchor="middle">GND</text>
+      <rect x="85" y="0" width="25" height="20" rx="3" fill="#555" /><text x="97" y="14" fill="white" text-anchor="middle">8</text>
+      <line x1="110" y1="10" x2="185" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="185" y="2" width="15" height="16" fill="#bdc3c7" />
+    </g>
+
+    <g transform="translate(300, 45)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">16</text>
+      <rect x="120" y="0" width="45" height="20" rx="3" fill="#d93025" /><text x="142" y="14" fill="white" text-anchor="middle">VCC</text>
+    </g>
+
+    <g transform="translate(300, 83)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">15</text>
+      <rect x="120" y="0" width="45" height="20" rx="3" fill="#a44ca0" />
+      <text x="142" y="14" fill="white" text-anchor="middle">Q<tspan dy="3" font-size="9">A</tspan></text>
+    </g>
+
+    <g transform="translate(300, 121)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">14</text>
+      <rect x="120" y="0" width="45" height="20" rx="3" fill="#f9ab00" /><text x="142" y="14" fill="white" text-anchor="middle">SER</text>
+    </g>
+
+    <g transform="translate(300, 159)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">13</text>
+      <rect x="120" y="0" width="45" height="20" rx="3" fill="#f47b20" />
+      <text x="142" y="15" fill="white" text-anchor="middle">OE</text>
+      <line x1="133" y1="4" x2="151" y2="4" stroke="white" stroke-width="1.5" /> </g>
+
+    <g transform="translate(300, 197)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">12</text>
+      <rect x="120" y="0" width="45" height="20" rx="3" fill="#0f9d58" /><text x="142" y="14" fill="white" text-anchor="middle">RCLK</text>
+    </g>
+
+    <g transform="translate(300, 235)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">11</text>
+      <rect x="120" y="0" width="55" height="20" rx="3" fill="#00a1e4" /><text x="147" y="14" fill="white" text-anchor="middle">SRCLK</text>
+    </g>
+
+    <g transform="translate(300, 273)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">10</text>
+      <rect x="120" y="0" width="60" height="20" rx="3" fill="#009640" />
+      <text x="150" y="15" fill="white" text-anchor="middle">SRCLR</text>
+      <line x1="128" y1="4" x2="172" y2="4" stroke="white" stroke-width="1.5" /> </g>
+
+    <g transform="translate(300, 311)">
+      <rect x="0" y="2" width="15" height="16" fill="#bdc3c7" />
+      <line x1="15" y1="10" x2="90" y2="10" stroke="#888" stroke-width="2" />
+      <rect x="90" y="0" width="25" height="20" rx="3" fill="#555" /><text x="102" y="14" fill="white" text-anchor="middle">9</text>
+      <rect x="120" y="0" width="50" height="20" rx="3" fill="#4a3b89" />
+      <text x="145" y="14" fill="white" text-anchor="middle">CARRY</text>
+    </g>
+  </g>
+</svg>
