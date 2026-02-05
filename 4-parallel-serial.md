@@ -54,7 +54,7 @@ Wire up the circuit as shown in @fig-7segment-parallel-circuit. Each segment (a-
 :label: fig-7segment-parallel-circuit
 :alt: Circuit diagram showing how to connect a seven-segment display to an ESP32 microcontroller using parallel connections
 :align: center
-Circuit diagram showing how to connect a seven-segment display to an ESP32 microcontroller. Each segment (a-g) is connected to a separate GPIO pin through a 220 Ohm resistor. The common cathode is connected to ground.
+Circuit diagram showing how to connect a seven-segment display to an ESP32 microcontroller. Each segment (a-g) is connected to a separate GPIO pin through a 220 Ohm resistor. The common cathode is connected to ground. Figure made with [Fritzing](https://fritzing.org/).
 ```
 
 ### Controlling the Seven-Segment Display
