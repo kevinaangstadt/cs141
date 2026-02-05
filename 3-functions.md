@@ -382,11 +382,10 @@ pass
 3. Which line(s) constitute the main program?
 4. Is there a local variable defined anywhere? If so what is its scope?
 5. Does the function `f` return a value?
-6. Does the function `f` reference any global variables?
-7. Which lines constitute a function body?
-8. Are there any arguments used in the program? If so what and where are they? (tricky)
-9. Are there any parameters defined in the program? Explain.
-10. What does the last line do?
+6. Which lines constitute a function body?
+7. Are there any arguments used in the program? If so what and where are they? (tricky)
+8. Are there any parameters defined in the program? Explain.
+9. What does the last line do?
 :::
 
 :::{exercise}
