@@ -1,0 +1,262 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 580" style="font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+  <title>8-Bit Shift Register Animation (Universal Theme)</title>
+
+  <style>
+    /* Universal Theme Strategy:
+       Since img tags isolate the SVG from the parent HTML CSS classes,
+       we cannot detect .dark. Instead, we use Halos (paint-order: stroke)
+       to ensure text and elements contrast against ANY background.
+    */
+
+    :root {
+      --text-fill: #111111;
+      --text-halo: #ffffff;
+      
+      --box-stroke: #444444; /* Visible on both white and dark bg */
+      
+      --bit-0-fill: #e0e0e0;
+      --bit-1-fill: #66bb6a;
+      
+      --input-color: #d32f2f;
+      --input-halo: #ffffff;
+    }
+
+    /* --- Universal Text Styles (The Sticker Effect) --- */
+    .uni-text {
+      fill: var(--text-fill);
+      stroke: var(--text-halo);
+      stroke-width: 3px;
+      stroke-linejoin: round;
+      /* This puts the stroke BEHIND the fill, creating a clean halo */
+      paint-order: stroke fill; 
+      font-weight: bold;
+    }
+
+    .bit-val-text {
+      font-size: 16px;
+      text-anchor: middle;
+      dominant-baseline: central;
+      /* No halo needed inside the boxes, as boxes have their own background color */
+      fill: #000000; 
+      stroke: none;
+    }
+
+    .step-label {
+      font-size: 16px;
+    }
+
+    .q-label {
+      font-size: 12px;
+      text-anchor: middle;
+      fill: var(--text-fill);
+      stroke: var(--text-halo);
+      stroke-width: 2.5px;
+      paint-order: stroke fill;
+    }
+
+    .sub-text {
+      baseline-shift: sub;
+      font-size: 75%;
+    }
+
+    /* --- Box Styles --- */
+    .bit-box {
+      stroke: var(--box-stroke);
+      stroke-width: 2px;
+    }
+    
+    .bit-0 { fill: var(--bit-0-fill); }
+    .bit-1 { fill: var(--bit-1-fill); }
+
+    /* --- Input Arrow Styles --- */
+    /* We add a white halo to the arrow lines too so they pop on dark mode */
+    .input-arrow-bg {
+      stroke: var(--input-halo);
+      stroke-width: 4px;
+      stroke-linecap: round;
+    }
+    .input-arrow-fg {
+      stroke: var(--input-color);
+      stroke-width: 2px;
+      marker-end: url(#arrowhead-uni);
+    }
+
+    .input-val-label {
+      font-size: 14px;
+      font-weight: bold;
+      text-anchor: end;
+      fill: var(--input-color);
+      stroke: var(--text-halo);
+      stroke-width: 3px;
+      paint-order: stroke fill;
+    }
+    
+    /* Marker needs to be visible on both. 
+       We make it solid color. */
+    #arrowhead-uni polygon {
+      fill: var(--input-color);
+    }
+  </style>
+
+  <defs>
+    <marker id="arrowhead-uni" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto">
+      <polygon points="0 0, 7 2.5, 0 5" />
+    </marker>
+  </defs>
+
+  <g class="root-group">
+
+    <g transform="translate(60, 50)">
+      <text x="0" y="-20" class="uni-text step-label">Step 1: Shift In '1'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">1</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(460, 50)">
+      <text x="0" y="-20" class="uni-text step-label">Step 2: Shift In '1'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">1</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(60, 190)">
+      <text x="0" y="-20" class="uni-text step-label">Step 3: Shift In '0'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">0</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(460, 190)">
+      <text x="0" y="-20" class="uni-text step-label">Step 4: Shift In '1'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">1</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(60, 330)">
+      <text x="0" y="-20" class="uni-text step-label">Step 5: Shift In '0'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">0</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(460, 330)">
+      <text x="0" y="-20" class="uni-text step-label">Step 6: Shift In '0'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">0</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(60, 470)">
+      <text x="0" y="-20" class="uni-text step-label">Step 7: Shift In '1'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">1</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+    <g transform="translate(460, 470)">
+      <text x="0" y="-20" class="uni-text step-label">Step 8: Shift In '1'</text>
+      <g transform="translate(0, 15)">
+        <line x1="-15" y1="0" x2="13" y2="0" class="input-arrow-bg" />
+        <line x1="-15" y1="0" x2="15" y2="0" class="input-arrow-fg" />
+        <text x="-20" y="5" class="input-val-label">1</text>
+      </g>
+      <g transform="translate(25, 0)">
+        <g transform="translate(0,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">A</tspan></text></g>
+        <g transform="translate(35,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">B</tspan></text></g>
+        <g transform="translate(70,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">C</tspan></text></g>
+        <g transform="translate(105,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">D</tspan></text></g>
+        <g transform="translate(140,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">E</tspan></text></g>
+        <g transform="translate(175,0)"><rect width="30" height="30" class="bit-box bit-0" /><text x="15" y="15" class="bit-val-text">0</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">F</tspan></text></g>
+        <g transform="translate(210,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">G</tspan></text></g>
+        <g transform="translate(245,0)"><rect width="30" height="30" class="bit-box bit-1" /><text x="15" y="15" class="bit-val-text">1</text><text x="15" y="55" class="q-label">Q<tspan class="sub-text">H</tspan></text></g>
+      </g>
+    </g>
+
+  </g>
+</svg>
