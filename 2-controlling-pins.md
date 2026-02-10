@@ -265,6 +265,7 @@ led.off()  # Turn the LED off
 ```
 :::
 
+(sec-dimming-led)=
 ## Programmatically Dimming an LED
 What if we wanted to make the LED dimmer instead of just fully on or fully off?
 One possibility would be to change the value of the current-limiting resistor to

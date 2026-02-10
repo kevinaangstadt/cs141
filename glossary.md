@@ -12,11 +12,23 @@ binary
 : a number system based on two digits (0 and 1)
 : a compiled program that can be executed directly by a processor
 
+bit
+: a binary digit, the smallest unit of data in computing, representing a value of either 0 or 1
+
 built-in function
 : a function that is provided as part of the programming language and is always available for use without needing to import any additional modules or libraries
 
+bus
+: a communication system that transfers data between components inside a computer or between computers using a collection of wires
+
+byte
+: a unit of digital information that consists of 8 bits, a common size for building blocks of data in computing
+
 circuit
 : a combination of electronic components that are connected together to perform some task
+
+clock
+: a signal that oscillates between high and low states at a constant frequency, used to synchronize the operations of a digital circuit
 
 comment
 : a note in the source code of a program that is ignored by the computer and is intended to provide explanations or context for human readers
@@ -83,6 +95,9 @@ module
 operating system
 : software that manages computer hardware and software resources and provides common services for computer programs. Common examples include Windows, macOS, Linux, iOS, and Android
 
+parallel data
+: a method of transmitting multiple pieces of information simultaneously across multiple channels
+
 parameter
 : a named variable in a function definition that stores the value of an argument passed to the function when it is called
 
@@ -97,6 +112,12 @@ resistor
 
 scope
 : the region of a program where a variable can be accessed or used
+
+serial data
+: a method of transmitting data one bit at a time over a single channel or wire
+
+shift register
+: a digital circuit that can store and shift data bits in a serial or parallel manner, often used for expanding the number of output pins in microcontroller applications
 
 square wave
 : a type of waveform that alternates between two levels (high and low) with a sudden transition between them, creating a square-like shape when plotted on a graph
