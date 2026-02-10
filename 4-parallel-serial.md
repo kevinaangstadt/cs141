@@ -410,6 +410,10 @@ storage_clock = machine.Pin(25, machine.Pin.OUT)
 output = machine.Pin(33, machine.Pin.OUT)
 data = machine.Pin(32, machine.Pin.OUT)
 
+# we want to disable clearing the shift register and enable the output by default
+clear.on()  # active low, so we set it high to disable clearing
+output.off()  # active low, so we set it low to enable output
+
 # Shift in 8 bits of data, all set to 1, to turn on all
 # segments of the display
 shift_in_bit(1)
