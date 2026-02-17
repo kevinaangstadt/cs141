@@ -4,6 +4,8 @@ numbering:
 ---
 # Glossary
 ```{glossary}
+active low
+: a signal or device that is considered active when it is in a low voltage state (0 or ground) rather than a high voltage state (1 or Vcc)
 
 argument
 : a piece of data (value) that is provided as input to a function when it is called
