@@ -79,6 +79,9 @@ general-purpose input/output (GPIO)
 global variable
 : a variable that is defined outside of any function and can be accessed from anywhere in the program
 
+hexadecimal
+: a number system based on sixteen digits (0-9 and A-F), often used in computing as a more compact representation of binary data
+
 integer
 : a whole number (i.e., no decimal point)
 

@@ -9,6 +9,7 @@ project:
     - file: 2-controlling-pins.md
     - file: 3-functions.md
     - file: 4-parallel-serial.md
+    - file: 5-binary-repetition.md
     - file: glossary.md
       options:
         numbered: false
