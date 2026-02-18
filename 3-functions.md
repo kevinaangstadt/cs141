@@ -392,7 +392,7 @@ We will provide a module `switch.py` that implements a simple way to debounce a
 switch. You can download it from the resources section. We will use it in just a
 bit.
 
-### Wiring up Buttons and LED
+### Wiring up Buttons and the LED
 Let's make a simple circuit with two buttons: one to turn on an LED and one to
 turn it off. 
 
