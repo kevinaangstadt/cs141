@@ -10,6 +10,9 @@ project:
     - file: 3-functions.md
     - file: 4-parallel-serial.md
     - file: 5-binary-repetition.md
+    - file: resources
+      options:
+        numbered: false
     - file: glossary.md
       options:
         numbered: false

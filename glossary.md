@@ -17,6 +17,9 @@ binary
 bit
 : a binary digit, the smallest unit of data in computing, representing a value of either 0 or 1
 
+bounce
+: the rapid on/off switching of a mechanical switch when it is pressed or released, which can cause multiple signals to be generated instead of a single clean transition
+
 built-in function
 : a function that is provided as part of the programming language and is always available for use without needing to import any additional modules or libraries
 

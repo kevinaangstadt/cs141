@@ -350,6 +350,125 @@ Consider our Fahrenheit-to-Celsius conversion function `f2c` that we placed in a
 file `util.py`. We can reuse that function whenever we want without having to
 reinvent the wheel every time.
 
+## Calling a Function with a Button
+Calling functions from our code is all well and good, but we can also call a
+function in response to an input on a microcontroller pin. For example, we could
+turn on an LED when a button is pressed. 
+
+We have seen before that we can use a `machine.Pin` object to output a high or
+low signal to turn on an LED. We can also use a `machine.Pin` object a signal
+applied to a pin. If 3.3V is connected to a pin, then the value of the pin is
+`1`. If 0V is connected to a pin, then the value of the pin is `0`. 
+
+A button is a simple device that can be used to connect a pin to 3.3V
+temporarily. When the button is pressed, there is a connection between the pin
+and 3.3V. When the button is released, there is no connection between the pin
+and 3.3V. We call this kind of button a *momentary, normally open*
+button.[^nc-button]
+
+[^nc-button]: There are also *normally closed* buttons, which are the opposite.
+    When a normally closed button is pressed, there is no connection between the
+    pin and 3.3V. When the button is released, there is a connection between the
+    pin and 3.3V.
+
+To ensure that there is a very clear `0` input when the button is not pressed,
+we connect the pin to ground (0V) through a high-value resistor (e.g., 10K
+ohms). This is called a *pull-down* resistor. When the button is pressed, the
+3.3V signal overrides the pull-down resistor and the pin reads `1`. When the
+button is released, the pull-down resistor brings the voltage back down to `0`
+and the pin reads `0`.
+
+There is one problem with buttons that we have to handle: {term}`bounce`.
+Because a button is a mechanical device, the connection between 3.3V and the pin
+is not perfectly clean. It might actually connect, disconnect, connect, etc.
+several times in a very short period (think milliseconds or nanoseconds). If
+we're not careful, the microcontroller might read several `1`s and `0`s when the
+button is pressed or released, which could cause our program to behave
+erratically. To handle this, we can use a technique called *debouncing*, which
+involves ignoring any changes in the button state for a short period of time
+after the first change is detected.
+
+We will provide a module `switch.py` that implements a simple way to debounce a
+switch. You can download it from the resources section. We will use it in just a
+bit.
+
+### Wiring up Buttons and LED
+Let's make a simple circuit with two buttons: one to turn on an LED and one to
+turn it off. 
+
+Items you will need:
+
+* ESP32 board
+* Red LED (note that the longer leg is the anode (+))
+* 220Ω resistor
+* 10kΩ resistor (x2)
+* Pushbutton (x2)
+* Breadboard
+* Jumper wires (x6)
+
+Wire up the circuit as shown in @fig-led-button-circuit. The LED is connected to
+pin 14 through a 220Ω resistor. The first button is connected to pin 12 and the
+second button is connected to pin 13. Both buttons are connected to ground
+through a 10kΩ pull-down resistor. The other side of the button is connected to
+3.3V.
+
+
+
+```{figure} img/fig-led-button-circuit.png
+:label: fig-led-button-circuit
+:align: center
+A simple circuit with two buttons to turn an LED on and off.
+```
+
+### Writing the Code
+
+Start by grabbing a copy of `switch.py` from @resources. You will need to upload this to the ESP32. Then you can use it in your program to handle the button presses.
+
+We will need to write two functions: one to turn the LED on and one to turn the
+LED off. This code should look familiar:
+
+```{code-block} python
+:linenos:
+import machine
+import switch
+
+def turn_on(pin):
+    '''
+    Turn on the LED connected to pin.
+    :param pin: the machine.Pin object that was triggered by the button press
+    '''
+    led.on()
+
+def turn_off(pin):
+    '''
+    Turn off the LED connected to pin.
+    :param pin: the machine.Pin object that was triggered by the button press
+    '''
+    led.off()
+
+# MAIN Program
+
+# Create a pin for the LED
+led = machine.Pin(14, machine.Pin.OUT)
+```
+
+One note about the `turn_on` and `turn_off` functions. They take a parameter `pin`, which is the pin that was triggered by the button press. We don't actually use this parameter in the function body, but it is required by the `switch` module that we will use to handle the button presses.
+
+Now we can set up the buttons to call these functions when they are pressed. The `switch` module provides a `Switch` function we call to create a switch object. We just need to pass in the pin number and the function to call when the button is pressed. Note that we don't call the function here. We just pass in the function name without parentheses. This is because functions can also be treated as values in Python, and we are passing the function itself as an argument to the `Switch` function.
+
+```{code-block} python
+:linenos:
+:lineno-start: 23
+# Create switch objects for the buttons
+switch.Switch(12, turn_on)
+switch.Switch(13, turn_off)
+```
+
+That's it! When you run this program, pressing the button connected to pin 12
+should turn on the LED, and pressing the button connected to pin 13 should turn
+off the LED.
+
+
 ## Additional Exercises
 
 :::{exercise}
