@@ -38,6 +38,9 @@ bus
 byte
 : a unit of digital information that consists of 8 bits, a common size for building blocks of data in computing
 
+checksum
+: an integer derived from a larger integer and is used to detect communication errors between devices
+
 circuit
 : a combination of electronic components that are connected together to perform some task
 

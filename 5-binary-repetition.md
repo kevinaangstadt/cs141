@@ -502,9 +502,15 @@ There is actually a subtle bug in this code that can sometimes lead to a crash. 
 
 ### Infinite Loops
 With microcontrollers, it is quite common to have a program that runs forever,
-or at least until the power is turned off. For example, we may wish to continuously output a message to a display, or continuously read sensor data and respond to it. 
+or at least until the power is turned off. For example, we may wish to
+continuously output a message to a display, or continuously read sensor data and
+respond to it. 
 
-In all of our previous programs, MicroPython would execute the code and then stop. We can create a program that runs indefinitely by using a `while` loop with a condition that is always `True`. In this case, we can use the boolean literal `True` as the condition for the loop, which will cause it to run forever.
+In all of our previous programs, MicroPython would execute the code and then
+stop. We can create a program that runs indefinitely by using a `while` loop
+with a condition that is always `True`. In this case, we can use the boolean
+literal `True` as the condition for the loop, which will cause it to run
+forever.
 
 ```{code-block} python
 :linenos:
@@ -519,14 +525,245 @@ while True:
 print("This will never be printed.")
 ```
 
-We call this an *infinite loop* because it runs indefinitely. Infinite loops are useful for microcontroller programs that need to run continuously, but they can also be a source of bugs if not used carefully. If you accidentally create an infinite loop in a program that is not meant to run forever, it can cause your computer to become unresponsive or crash. 
+We call this an *infinite loop* because it runs indefinitely. Infinite loops are
+useful for microcontroller programs that need to run continuously, but they can
+also be a source of bugs if not used carefully. If you accidentally create an
+infinite loop in a program that is not meant to run forever, it can cause your
+computer to become unresponsive or crash. 
 
 :::{note}
-For something as simple as `while True`, it's possible to notice this is an infinite loop just by looking at the code. However, it turns out that it is impossible to always determine correctly whether a given program will terminate or run forever. This is known as the *Halting Problem* and is a fundamental result in computer science that has implications for software development and the limits of computability.
+
+For something as simple as `while True`, it's possible to notice this is an
+infinite loop just by looking at the code. However, it turns out that it is
+impossible to always determine correctly whether a given program will terminate
+or run forever. This is known as the *Halting Problem* and is a fundamental
+result in computer science that has implications for software development and
+the limits of computability.
+
 :::
 
+## Applications of Loops
+Loops are incredibly powerful and useful in programming. They allow us to perform repetitive tasks without having to write the same code multiple times. Here are a couple of applications where loops help us solve problems more efficiently.
 
+### Exponential Growth: Password Length
 
+Why are longer passwords better than shorter passwords? For one, longer
+passwords are harder to guess. But how much harder? Let's say we allowed
+passwords to contain 26 upper or lower case characters (that is 52 possible
+alphabetic characters, in the English alphabet), ten digits 0 through 9, and 32
+symbol characters `~!@#$%^&*()_-+={[}]"':;>.<,?/|\`. That is 94 possible
+distinct characters that can be used in a password.[^arbitrary-94]
+
+[^arbitrary-94]: A rather arbitrary number, 94, but it is probably close.
+
+There are $94$ one character passwords, $94^2 = 8836$ two character passwords,
+$94^3 = 830584$ three character passwords, and so on, so that if a password was
+ten characters long there are $94^{10} = 53861511409489970176$ possible
+passwords or approximately $5 \times 10^{19}$.
+
+Plotting $94^i$, where $i$ is the number of characters in the password, gives us
+the graph:
+
+```{figure} ./img/fig-94_to_the_i.png
+:label: fig-94_to_the_i
+:align: center
+:alt: Graph of 94^i
+A plot of $94^i$ where $i$ is the number of characters in the password.
+```
+
+This is an example of *exponential growth* in the number of characters in the
+password. Notice how the graph explodes at between 8 and 10 characters (was it
+ever suggested that you make your passwords more than 8 characters long?) What
+is the total number of passwords up to 10 characters long? We would have to
+include all of the nine character passwords, and the eight character passwords,
+etc. and compute the sum $94^1 + 94^2 + 94^3 + \cdots + 94^{10}$.
+
+```{code-block} python
+:linenos:
+
+i = 1
+total = 0
+while i <= 10:
+    total += 94**i
+    i += 1
+
+print(total)
+```
+
+which would print `54440667446151152650`, which is also just bigger than $5.4 \times 10^{19}$.
+
+To emphasize the difference between a six character password and a ten character
+password, let's assume a malicious hacker was trying to break into a system by
+trying all possible passwords. How long might it take? Let's say we had a
+powerful computer that could attempt 1 billion passwords per second.
+
+For a six character password that's $94^6/10^9/60 \approx 11.5$ minutes to try
+all possibilities. On average we will search about half the passwords, so on
+average it would take about $6$ minutes.
+
+For a ten character password, we have $94^{10}/10^9$ seconds. Dividing by $60$
+to get minutes then another $60$ for hours, then $24$ to get days, then $365.25$
+to get years, we have $94^{10}/10^9/60/60/24/365.25 = 1706$ years! Again, this
+is to try them all, so on average we would find it after looking at half of the
+passwords, so it would only take about $850$ years.
+
+:::{note}
+
+A *brute force attack* is one where an attacker tries all possible combinations
+of passwords. The number of possible passwords grows exponentially with their
+length. As we saw, brute force attacks are most effective against short
+passwords.
+
+:::
+
+### Checksums: Detecting Communication Errors
+
+Microcontrollers often need to communicate with other devices, such as sensors,
+displays, other microcontrollers, and even the internet. When data is
+transmitted between devices, there is always a possibility of errors occurring
+during transmission. As a heavy-handed example, imagine a wire is unplugged from
+a pin while the data is being transmitted. This doesn't happen often (but
+rodents have been known to chew through wires), but other types of errors such
+as radio interference, electrical noise, or even cosmic rays can cause data to
+become corrupted during transmission. It is important that we have a way to
+detect when this happens so that we can take appropriate action, such as
+requesting the data to be retransmitted.
+
+A {term}`checksum` is an integer derived from a larger integer and is used to
+detect communication errors between devices. There are many different checksum
+techniques, but one of the easiest to understand is to add up the digits in a
+base-ten integer mod ten and then append that number to the original integer.
+Recall that in a computer, everything is represented as bits; music, images, web
+pages, Word documents, etc. Sequences of bits are just integers. Rather than
+work in the language of bits, binary, 0s and 1s, we will stick with the more
+familiar base-ten digits 0–9.
+
+If a microcontroller is transmitting the number $51623$, we would compute the
+checksum by computing $(5+1+6+2+3) \bmod 10 = 7$ and we would then transmit the
+number `516237`. We call `7` the *checksum digit*, or just *checksum* for short.
+What would happen if there was an error in the transmission and the number
+transmitted was `596237`? We remove the checksum digit `7` and compute the
+checksum of `59623`, which is $(5+9+6+2+3) \bmod 10 = 5$, and we see that $7
+\neq 5$, so there must have been an error in the transmission.
+
+Why does this work? This only works if there is a single error in a digit. It is
+easy to construct a case where if there were multiple errors, this would not
+work. For example, if we were transmitting the value `516237` and there were two
+errors in the original communication such as `526137`, the checksum is `7` in
+both. If there is only a single error, it makes sense that a change in any
+single digit would change the final checksum $\bmod 10$.
+
+:::{exercise}
+:label: ex-checksum-check
+
+What is the checksum digit for the integer $198723$?
+:::
+:::{solution} ex-checksum-check
+:class: dropdown
+
+It is $0$ because $(1 + 9 + 8 + 7 + 2 + 3) \bmod 10 = 30 \bmod 10 = 0$.
+:::
+
+How can we write a program to compute a checksum? If we have an integer such as
+`51623`, we can get the last digit using `% 10`; for example, $51623 \bmod 10 =
+3$. Then we need to do the same to the remaining digits `5162`. We can get that
+using *integer division* by 10: `51623 // 10 = 5162`. We just keep repeating
+this process, adding up the remainder until the number has been reduced to `0`.
+
+We can put this in a function that takes an integer to compute the checksum of
+and return the checksum.
+
+```{code-block} python
+:linenos:
+
+def checksum(n):                 
+    total = 0                    
+                             
+    while n > 0:                 
+        total = total + (n % 10)
+        n = n // 10              
+    return total % 10            
+```
+
+Or more concisely:
+* `total += n % 10` instead of `total = total + (n % 10)`
+* `n //= 10` instead of `n = n // 10`
+
+:::{exercise}
+:label: ex-checksum-review
+
+1. Does the `checksum` function use any local variables?
+2. `n` on line 1 is a _______________
+3. Line 1 is the function _______________
+4. Lines 2–6 constitute the function _______________
+5. `total` on line 2 is defined as a _______________ variable.
+6. What is the value of `checksum(91242)`?
+:::
+:::{solution} ex-checksum-review
+:class: dropdown
+
+1. Yes, it uses `total` as a local variable to accumulate the sum of digits.
+2. `n` on line 1 is a *parameter*
+3. Line 1 is the function *definition* (or *header*)
+4. Lines 2–6 constitute the function *body*
+5. `total` on line 2 is defined as a *local* variable
+6. `checksum(91242)` = $(9 + 1 + 2 + 4 + 2) \bmod 10 = 18 \bmod 10 = 8$
+:::
+
+How can we append the checksum of an integer to the end (the *least significant
+digit*)? For example, if the checksum of $51326$ is $7$, how do we build the new
+integer $513267$?
+
+```{code-block} python
+:linenos:
+
+# Compute the checksum of x, the integer we want to transmit
+check = checksum(x)  
+# Multiply x by 10 shifting it left, and then add in the checksum digit 
+data = x * 10 + check 
+```
+
+### LEDs: Fading Brightness
+In @sec-dimming-led, we saw that it is possible to adjust the brightness of an
+LED by controlling how long it is on versus off. What if we'd like to gradually
+change the brightness of an LED, creating a fading effect? We can achieve this
+by using a loop to adjust the on and off times in a way that creates the
+illusion of the LED fading in and out.
+
+Let's construct a program that fades an LED from of to full brightness. We can
+use a *counting loop* to iterate over the valid PWM levels (i.e., from `0` to
+`1023`) and adjust the *duty cycle* accordingly. You will need the circuit from
+@sec-wiring-up-led-circuit to follow along.
+
+```{code-block} python
+:linenos:
+import machine
+import time
+
+# create a PWM object for the LED pin
+led_pwm = machine.PWM(machine.Pin(32))
+# Set frequency to 1 kHz
+led_pwm.freq(1000)  
+
+# construct a counting loop
+i = 0
+while i <= 1023:
+    # set the duty cycle to the current value of i
+    led_pwm.duty(i)
+    # pause for 50ms before the next update
+    time.sleep_ms(50)
+    # update the counter variable to the next value
+    i = i + 1
+``` 
+
+:::{exercise}
+:label: ex-led-fade-in-time
+How long does it take for the LED to fade in from off to full brightness in the program above?
+:::
+:::{solution} ex-led-fade-in-time
+:class: dropdown
+The loop iterates from `0` to `1023`, which means it executes `1024` times. Each iteration has a pause of `50ms`, so the total time for the LED to fade in is $1024 \times 50ms = 51200ms$, which is `51.2` seconds.
+:::
 
 ## Additional Exercises
 :::{exercise}
@@ -573,3 +810,112 @@ while i >= 0:
     i = i - 1
 print("Blast off!")
 ```
+:::
+
+:::{exercise}
+:label: ex-fibonacci
+
+*The Fibonacci Sequence* is the sequence of integers $0,1,1,2,3,5,8,13\cdots$.
+Each Fibonacci number is the sum of the previous two Fibonacci numbers. By
+definition the first two Fibonacci numbers are $0$ and $1$. If the first
+Fibonacci number is $0$ then the seventh Fibonacci number is $8$. Write a
+while-loop to compute the one-hundredth Fibonacci number. 
+
+**Hint:** This is a little tricky. Use two variables, one to keep track of the
+current Fibonacci number and one for the previous Fibonacci number. 
+
+:::
+:::{solution} ex-fibonacci
+The answer you get should be `218922995834555169026`.  This is a surprisingly large number. The Fibonacci sequence actually exhibits exponential growth. 
+:::
+
+:::{exercise}
+:label: ex-sum-of-squares
+Write a while loop to compute the sum of squares from $1$ to $100$, or $1^2 + 2^2 + 3^2 + \cdots + 100^2$.
+:::
+
+:::{exercise}
+:label: ex-hello-count
+
+How many times will `hello` be printed by the code below?
+
+```{code-block} python
+:linenos:
+i = 2
+while i < 11:
+    print("hello")
+	i = i + 2
+```
+:::
+
+
+:::{exercise}
+:label: ex-hello-count-2
+
+How many times will `hello` be printed by the code below?
+
+```{code-block} python
+:linenos:
+i = 12
+while i < 18:
+    print("hello")
+    i = i + 1
+```
+:::
+
+:::{exercise}
+:label: ex-loop-output
+
+What is the output the code below?
+
+```{code-block} python
+:linenos:
+i = 1
+n = 10
+while i < n:
+    i = i * 2
+print(i)
+```
+:::
+
+:::{exercise}
+:label: ex-num-digits
+
+Write a function `num_digits` that will return the number of digits in an
+integer. For example, if we were to call `num_digits(5132981)` it would return
+`7` because there are seven digits in `5132981`. Hint: this is similar to the
+`checksum` program. 
+:::
+
+:::{exercise}
+:label: ex-asterisk-triangle
+
+The `*` operator can be applied to a string and an integer. For example, `'Z' *
+5` evaluates to `ZZZZZ`. Write a Python program that reads an integer from the
+user and prints a triangle pattern of asterisks. For example, if the user enters
+`6` then there are six rows of asterisks where the first row has one asterisk
+and the sixth row has six asterisks as in the sample output below.
+
+```
+Enter n: 6
+*
+**
+***
+****
+*****
+******
+```
+:::
+:::{solution} ex-asterisk-triangle
+:class: dropdown
+Here is one solution:
+```{code-block} python
+:linenos:
+n = int(input("Enter n: "))
+
+i = 1
+while i <= n:
+    print('*' * i) 
+    i = i + 1
+```
+:::
