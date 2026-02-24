@@ -7,8 +7,14 @@ numbering:
 active low
 : a signal or device that is considered active when it is in a low voltage state (0 or ground) rather than a high voltage state (1 or Vcc)
 
+analog
+: a continuous signal that can take on any value within a certain range, as opposed to a digital signal which can only be on or off (1 or 0)
+
 argument
 : a piece of data (value) that is provided as input to a function when it is called
+
+attenuate
+: to reduce the strength of a signal, often by using a resistor or other electronic component to decrease the voltage or current
 
 binary
 : a number system based on two digits (0 and 1)
@@ -16,6 +22,9 @@ binary
 
 bit
 : a binary digit, the smallest unit of data in computing, representing a value of either 0 or 1
+
+bit-banging
+: the process of manually controlling the timing and state of digital signals using software, often used to implement communication protocols without dedicated hardware support
 
 bounce
 : the rapid on/off switching of a mechanical switch when it is pressed or released, which can cause multiple signals to be generated instead of a single clean transition
@@ -136,7 +145,13 @@ statement
 string literal
 : in MicroPython, a sequence of characters between double quotes or single quotes
 
+thermistor
+: a type of resistor that changes its resistance based on the temperature, often used as a temperature sensor
+
 variable
 : a named location in memory that can hold a value which may change during the execution of a program
+
+voltage divider
+: a simple circuit that uses two resistors to divide the input voltage into a lower output voltage, often used to measure higher voltages with an ADC that has a lower voltage range
 
 ```
