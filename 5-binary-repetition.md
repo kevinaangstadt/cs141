@@ -723,6 +723,7 @@ check = checksum(x)
 data = x * 10 + check 
 ```
 
+(sec-led-fading-brightness)=
 ### LEDs: Fading Brightness
 In @sec-dimming-led, we saw that it is possible to adjust the brightness of an
 LED by controlling how long it is on versus off. What if we'd like to gradually
@@ -918,4 +919,12 @@ while i <= n:
     print('*' * i) 
     i = i + 1
 ```
+:::
+
+:::{exercise}
+:label: ex-led-fade-in-out
+
+Write a program that fades an LED in and out continuously. One cycle of fading
+in and out should take about 1 second. You can use the code from
+@sec-led-fading-brightness as a starting point.
 :::
