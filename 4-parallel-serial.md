@@ -1,3 +1,4 @@
+(chap-parallel-serial)=
 # Parallel and Serial Data
 
 ## Controlling Multiple Pins
