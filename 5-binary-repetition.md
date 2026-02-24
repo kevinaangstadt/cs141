@@ -500,6 +500,33 @@ There is actually a subtle bug in this code that can sometimes lead to a crash. 
 [^bug]: Hint: What if the very first number the user entered was negative?
 :::
 
+### Infinite Loops
+With microcontrollers, it is quite common to have a program that runs forever,
+or at least until the power is turned off. For example, we may wish to continuously output a message to a display, or continuously read sensor data and respond to it. 
+
+In all of our previous programs, MicroPython would execute the code and then stop. We can create a program that runs indefinitely by using a `while` loop with a condition that is always `True`. In this case, we can use the boolean literal `True` as the condition for the loop, which will cause it to run forever.
+
+```{code-block} python
+:linenos:
+# This program will never terminate
+# it will just keep (re)executing the loop body forever
+while True:
+    # body of code to repeat indefinitely
+    code_statement(s)
+    # ... more code statements if needed
+
+# code here will never be reached because the loop runs forever
+print("This will never be printed.")
+```
+
+We call this an *infinite loop* because it runs indefinitely. Infinite loops are useful for microcontroller programs that need to run continuously, but they can also be a source of bugs if not used carefully. If you accidentally create an infinite loop in a program that is not meant to run forever, it can cause your computer to become unresponsive or crash. 
+
+:::{note}
+For something as simple as `while True`, it's possible to notice this is an infinite loop just by looking at the code. However, it turns out that it is impossible to always determine correctly whether a given program will terminate or run forever. This is known as the *Halting Problem* and is a fundamental result in computer science that has implications for software development and the limits of computability.
+:::
+
+
+
 
 ## Additional Exercises
 :::{exercise}
