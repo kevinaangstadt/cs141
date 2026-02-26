@@ -100,6 +100,9 @@ hexadecimal
 integer
 : a whole number (i.e., no decimal point)
 
+keyword (named) argument
+: an argument passed to a function that is identified by the name of the parameter it corresponds to, rather than by its position in the argument list
+
 library
 : a collection of pre-written code (functions, variables, etc.) that can be used to perform common tasks in a programming language
 

@@ -346,6 +346,30 @@ lcd.print(f"Temp: {round(temperature, 2)} C   ")
 ```
 :::
 
+You might have noticed that the function calls to create an I2C object and an
+LCD object are a bit different from what we have seen before:
+
+```{code-block} python
+:linenos:
+:lineno-start: 29
+# NEW set up the I2C connection and initialize the LCD
+i2c = machine.I2C(1, sda=machine.Pin(21), scl=machine.Pin(22))
+lcd = lcd_i2c.LCD(0x27, 16, 2, i2c=i2c)
+```
+The function arguments that begin with `sda=` and `scl=` are called
+{term}`keyword (named) arguments <keyword (named) argument>`. These are often
+used in MicroPython when a function has parameters that are optional. If we
+called `machine.I2C(1)`, it would create an I2C object with default values for
+the SDA and SCL pins, but we can also override those defaults by using keyword
+arguments to specify the pins we want to use for SDA and SCL. On an ESP32 (and other microcontrollers), there are specific pins that connect to the I2C hardware build into the device, so we have to use those specific pins for SDA and SCL when we create the I2C object.
+
+Similarly, the `lcd_i2c.LCD` function chooses the default I2C object, but we
+need our custom I2C object, so we use the `i2c=` keyword argument to specify our
+I2C object instead.  
+
+Keyword arguments can be passed in any order, so long as they are provided after
+all of the unnamed (positional) arguments. 
+
 ## Running the Code on Boot
 It would be really cool to walk around with our device and have it display the
 temperature without needing to connect it to a computer and run the code
