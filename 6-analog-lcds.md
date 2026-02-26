@@ -19,9 +19,26 @@ value that we can use in our programs. MicroPython gives us a simple was to read
 this pin value and get its equivalent value in microvolts (a microvolt is one
 millionth of a volt).
 
-Not all pins on the microcontroller can be used for analog input, so we must select a pin that has an ADC associated with it. On the ESP32, the pins that can be used for analog input are 0, 2, 4, 12-15, 25-27, and 32-39. We can create an `ADC` object for one of these pins and then call the `read_u16()` method to get the value in microvolts. 
+Not all pins on the microcontroller can be used for analog input, so we must
+select a pin that has an ADC associated with it. On the ESP32, the pins that can
+be used for analog input are 0, 2, 4, 12-15, 25-27, and 32-39. We can create an
+`ADC` object for one of these pins and then call the `read_u16()` method to get
+a value in the range 0-65535.
 
-One major consideration is that the ADC can only read voltages around 1.1 volts, so if we want to read a sensor that produces a higher voltage, we need to {term}`attenuate` the signal. Fortunately, MicroPython provides a simple way to do this by calling the `atten()` method on the `ADC` object. For example, if we want to read a sensor that produces voltages up to 3.3 volts, we can call `adc.atten(machine.ADC.ATTN_11DB)` to set the attenuation level to 11 decibels, which allows us to read voltages up to 3.3 volts.
+What does this number represent? This number is a *relative* value that
+represents the voltage on the pin as a fraction of the maximum voltage that the
+ADC can read. For example, if the ADC can read voltages up to 3.3 volts, then a
+reading of 32768 would represent a voltage of approximately 1.65 volts (half of
+3.3 volts).
+
+One major consideration is that the ADC on the ESP32 can only read voltages up
+to around 1.1 volts directly, so if we want to read a sensor that produces a
+higher voltage, we need to {term}`attenuate` the signal. Fortunately,
+MicroPython provides a simple way to do this by calling the `atten()` method on
+the `ADC` object. For example, if we want to read a sensor that produces
+voltages up to 3.3 volts, we can call `adc.atten(machine.ADC.ATTN_11DB)` to set
+the attenuation level to 11 decibels, which allows us to read voltages up to 3.3
+volts.
 
 As a complete example, to read from pin 34, we can do the following:
 
@@ -36,6 +53,19 @@ while True:
     value = adc.read_u16()
     print(value)
 ```
+
+:::{note}
+
+It's worth noting that the ADC on the ESP32 is not known for being very
+accurate, and the readings can be quite noisy. If you need more accurate
+readings, you may want to consider using an external ADC that connects to the
+microcontroller via serial communication, such as I2C or SPI. These external
+ADCs often have better resolution and accuracy than the built-in ADC on the
+ESP32.
+
+:::
+
+There is also a `read_uv()` method that returns the voltage in microvolts, which can be more convenient for some applications. This method tries to account for manufacturing variations in the ADC and provide a more accurate voltage reading. There can still be a decent amount of error in these readings, which can have an impact on the accuracy of our sensor readings, but it is generally better than using the raw `read_u16()` values.
 
 ## Reading Temperature with a Thermistor
 A common type of analog sensor is a {term}`thermistor`, which is a type of resistor that changes its resistance based on the temperature. By measuring the voltage across the thermistor, we can determine the temperature. A common type of thermistor is the NTC (negative temperature coefficient) thermistor, which decreases its resistance as the temperature increases. 
@@ -73,7 +103,7 @@ $$
 Since we know that 0 degrees Celsius is equal to 273.15 Kelvin, we can convert the result back to celsius by subtracting 273.15 from the result in Kelvin: $315.96 - 273.15 = 42.81^\circ C$.
 :::
 
-### Converting Resistance to Voltage
+### Converting Voltage to Resistance
 The astute reader will note that an analog pin reads *voltage*, not
 *resistance*. Thus the equation above is not directly useful for calculating the
 temperature from the value read from the ADC. Fortunately, we can use a clever
@@ -168,6 +198,37 @@ while True:
     # wait for 1 second before reading again
     time.sleep(1)
 ```
+
+:::{note}
+
+We noted that the accuracy of the ADC can be quite poor, which can lead to
+inaccurate temperature readings. Because we're not trying to measure large
+temperature changes, we could try to improve this by adding a *correction factor* to our initial voltage reading to account for the error in the ADC. 
+
+To do this, add a `print` statement to output `V_thermistor` to the console.
+Using a digital multimeter, measure the actual voltage between ground and the pin connected to the thermistor as shown in @fig-thermistor-multimeter. Compare this voltage to the value printed by the code. 
+
+Add a line to calculate the correction factor as the ratio of the actual voltage to the measured voltage, and then multiply `V_thermistor` by this correction factor before using it in the rest of the calculations. This should help improve the accuracy of our temperature readings.
+
+The beginning of our function would now look like this:
+
+```{code-block} python
+:linenos:
+:lineno-start: 14
+    # calculate the correction factor
+    CORRECTION_FACTOR = <actual_voltage> / <printed_voltage>
+    # read the ADC value in microvolts and convert it to volts
+    V_thermistor = thermistor.read_uv() / 1000000 * CORRECTION_FACTOR
+```
+
+```{figure} /img/fig-thermistor-multimeter.png
+:label: fig-thermistor-multimeter
+:alt: A photo of a multimeter measuring the voltage across the thermistor in the circuit.
+:align: center
+A photo of a multimeter measuring the voltage across the thermistor in the circuit.
+```
+
+:::
 
 ## Using an External Display
 Printing to the console is useful for debugging, but it is not very practical
@@ -352,5 +413,5 @@ The temperature readings from the thermistor can be noisy due to fluctuations in
 
 :::{exercise}
 :label: thermistor-fahrenheit
-Modify your code to also print the temperature in degrees Fahrenheit. 
+Modify your code to also print the temperature in degrees Fahrenheit. Don't just embed the conversion, but use a separate function to convert from Celsius to Fahrenheit. The formula for converting Celsius to Fahrenheit is: $F = C \cdot \frac{9}{5} + 32$. (You might even have this function already!)
 :::
