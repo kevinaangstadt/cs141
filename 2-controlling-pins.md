@@ -510,7 +510,7 @@ We leave the implementation up to you!
 :::
 
 :::{exercise}
-:lablel: pwm-blink-led
+:label: pwm-blink-led
 
 If we set the PWM frequency low enough, we can see the LED blinking on and off.
 Write a program that blinks the LED on for 0.5 seconds and off for 0.5 seconds
