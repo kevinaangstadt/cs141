@@ -47,6 +47,9 @@ circuit
 clock
 : a signal that oscillates between high and low states at a constant frequency, used to synchronize the operations of a digital circuit
 
+code fragment
+: an incomplete segment of Python code that is not meant to be a complete program
+
 comment
 : a note in the source code of a program that is ignored by the computer and is intended to provide explanations or context for human readers
 
@@ -99,6 +102,9 @@ hexadecimal
 
 integer
 : a whole number (i.e., no decimal point)
+
+keyword
+: a reserved word in a programming language that has a special meaning and cannot be used as an identifier (such as a variable or function name)
 
 keyword (named) argument
 : an argument passed to a function that is identified by the name of the parameter it corresponds to, rather than by its position in the argument list
@@ -153,6 +159,9 @@ string literal
 
 thermistor
 : a type of resistor that changes its resistance based on the temperature, often used as a temperature sensor
+
+truth table
+: enumerates all possible outcomes of a logical operator for all possible inputs
 
 variable
 : a named location in memory that can hold a value which may change during the execution of a program

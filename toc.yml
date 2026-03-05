@@ -11,6 +11,7 @@ project:
     - file: 4-parallel-serial.md
     - file: 5-binary-repetition.md
     - file: 6-analog-lcds.md
+    - file: 7-conditionals-randomness.md
     - file: resources
       options:
         numbered: false
