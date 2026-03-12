@@ -409,6 +409,324 @@ The remaining logical operator is `not`, the logical negation of `True` and
 | `False` | `True` |
 | `True` | `False` |
 
+## Counting Rolls
+
+How hard is it to roll snake eyes? Well, we have a 1 in 6 chance of rolling a
+one on the first die and a 1 in 6 chance of rolling a one on the second die.
+Because these are *independent* events, we can multiply the probabilities
+together to calculate a probability of 1 in 36 of rolling snake eyes. We can
+verify this by simulating rolling a pair of dice many times and counting how
+many times we rolled snake eyes.
+
+Let's print out our answer to the LCD when we have an answer. As shown in
+@fig-lcd, the LCD connects to the I2C bus using GPIO pins 21 and 22. The LCD
+requires 5V to power the backlight.
+
+```{figure} img/fig-lcd-only.png
+:align: center
+:alt: LCD
+:label: fig-lcd
+A 16x2 LCD connected to the I2C bus using GPIO pins 21 and 22.
+``` 
+
+```{code-block} python
+:linenos:
+# simulate rolling two dice until we get both 1s
+
+import machine
+import random
+
+import lcd_i2c
+
+# create an I2C object to access the I2C serial communication bus
+i2c = machine.I2C(1, sda=machine.Pin(21), scl=machine.Pin(22))
+
+# make an LCD object to control the 16x2 display
+lcd = lcd_i2c.LCD(0x27, 16, 2, i2c=i2c)
+lcd.begin()
+
+# are we done rolling?
+done = False
+count = 0
+
+# keep rolling until we get snake eyes
+# we use a `done` variable to keep track of whether we are done or not,
+# which makes for a simple looping structure where we only have to set
+# `done` to `True` when we get snake eyes
+while not done:
+
+    # roll two dice
+    roll1 = random.randrange(1, 7)
+    roll2 = random.randrange(1, 7)
+    count += 1
+
+    if roll1 == 1 and roll2 == 1:
+        # mark that we are done
+        done = True
+        lcd.print("Snake Eyes")
+
+# print the total count
+# move to second line
+lcd.set_cursor(0,1)
+lcd.print(f"{count} rolls")
+```
+
+What happens when you run this code? We should see `Snake Eyes` on the first
+line of the LCD and the number of rolls it took to get snake eyes on the second
+line. If we run this code multiple times, we should see that it takes about 36
+rolls on average to get snake eyes. Sometimes, you will get very lucky and get
+snake eyes on the first roll, and sometimes you will get very unlucky and have
+to roll hundreds of times before you get snake eyes.
+
+## Triggering Conditional Events
+In the previous chapter, we measured the temperature using a thermistor. What if
+we wanted to trigger an event when the temperature exceeds a certain threshold?
+For example, we could turn on a fan or illuminate a warning light when the
+temperature exceeds some threshold.
+
+### Wiring Up the Circuit
+We will extend the circuit from the previous chapter to add both an LED and a
+button. We will illuminate the LED when the temperature exceeds our threshold
+and we will use the button to test that the LED is working. That is, the LED
+should light when *either* we press the button or the temperature exceeds our
+threshold.
+
+Additional items you will need:
+* Pushbutton switch
+* Red LED
+* 10KΩ resistor
+* 220Ω resistor
+* Jumper wires
+
+Add the additional components to the circuit as shown in
+@fig-lcd-thermistor-led-button. The button is connected to GPIO pin 36 with a
+10KΩ pull-down resistor. The LED is connected to GPIO pin 12 with a 220Ω current
+limiting resistor.
+
+```{figure} img/fig-lcd-thermistor-led-button.png
+:align: center
+:alt: LCD, Thermistor, LED, Button Circuit
+:label: fig-lcd-thermistor-led-button
+A circuit with a 16x2 LCD, a thermistor, an LED, and a button. The LCD is
+connected to the I2C bus using GPIO pins 21 and 22. The thermistor is connected 
+to GPIO pin 14. The LED is connected to GPIO pin 12. The button is connected to 
+GPIO pin 36. This image was created using [Fritzing](http://fritzing.org/).
+```
+
+### Modifying the Code
+Now we need to modify our code to read the button and turn on the LED when the
+button is pressed or when the temperature exceeds our threshold. We will use the
+logical `or` operator to check if either condition is true.
+
+The updated lines are highlighted below.
+
+```{code-block} python
+:linenos:
+:emphasize-lines: 30-34, 46-50
+import machine
+import math
+import time
+
+def read_temperature(thermistor, B, R0, T0):
+    """
+    Read the temperature from the thermistor in degrees Celsius.
+    :param thermistor: an ADC object connected to the thermistor voltage divider
+    :param B: the B-Parameter value of the thermistor
+    :param R0: the resistance of the thermistor at the reference temperature T0
+    :param T0: the reference temperature in Kelvin (typically 298.15 K for 25 degrees Celsius)
+    :return: the temperature in degrees Celsius
+    """
+    # read the ADC value in microvolts and convert it to volts
+    V_thermistor = thermistor.read_uv() / 1000000
+    
+    # convert voltage to resistance using the voltage divider formula
+    R_thermistor = 10000 * V_thermistor / (3.3 - V_thermistor)
+    
+    # calculate temperature using the Steinhart-Hart equation
+    T = B * T0 / (T0 * math.log(R_thermistor / R0) + B)
+    
+    # convert Kelvin to Celsius
+    return T - 273.15
+
+# set up the ADC on pin 14
+thermistor = machine.ADC(machine.Pin(14, machine.Pin.IN))
+thermistor.atten(thermistor.ATTN_11DB)
+
+# create a Pin object for the button on pin 36 with a pull-down resistor
+button = machine.Pin(36, machine.Pin.IN)
+
+# create a Pin object for the LED on pin 12
+led = machine.Pin(12, machine.Pin.OUT)
+
+# constants for the thermistor
+B = 3950    # A typical B-Parameter value for an NTC thermistor
+R0 = 10000  # 10K ohms at 25 degrees Celsius
+T0 = 298.15 # 25 degrees Celsius in Kelvin
+
+# loop forever and print the temperature every second
+while True:
+    # call our function to read the temperature
+    temperature = read_temperature(thermistor, B, R0, T0)
+
+    # check if the button is pressed or the temperature exceeds 25 degrees
+    if button.value() == 1 or temperature > 25:
+        led.on()    # turn on the LED
+    else:
+        led.off()   # turn off the LED
+
+    # Print the temperature rounded to 2 decimal places
+    print(f"Temperature: {round(temperature, 2)} C")
+    # wait for 1 second before reading again
+    time.sleep(1)
+```
+
+## Controlling a Fan
+Rather than just illuminating an LED, we may want to turn on a fan when the
+temperature exceeds a certain threshold. This is common in many devices to help
+with cooling. There are many different types of electric motors, but perhaps the
+most common type is the *DC motor*. A DC motor has two wires, a positive and a
+negative. When you apply a voltage across the wires, the motor spins. The
+direction of the spin depends on the polarity of the voltage. If you reverse the
+voltage, the motor will spin in the opposite direction.
+
+DC motors typically require more current than a microcontroller can provide, so
+we need to use an additional chip called a *motor driver* to control the motor.
+The motor driver acts as a switch that can turn the motor on and off, and can
+also reverse the voltage to change the direction of the motor. One common motor
+driver is the L293D, which can control two DC motors.
+
+A diagram showing the pins of the L293D motor driver is shown in @fig-l293d. The
+L293D has two channels, each of which can control a DC motor. Each channel has
+two input pins (IN1 and IN2 for channel 1, IN3 and IN4 for channel 2) that
+control the direction of the motor, and an enable pin (EN1 for channel 1, EN2
+for channel 2) that turns the motor on and off. All of the ground pins are
+connected together and should be connected to the ground of the microcontroller.
+The power pins are separate. VCC1 is the input voltage to power the IC. VCC2 is
+the input voltage to power the motors. The L293D can handle a wide range of
+voltages, but for our purposes we will use 5V to power the motors.
+
+The enable pins are "active high", meaning that a high voltage enables the
+output (compare this with the 74HC595 shift register, which had an active low
+enable pin!). When the channel is enabled, a high input value will result in a
+high output value. Thus, we can wire a DC motor across OUT1 and OUT2. If we set
+IN1 high and IN2 low, the motor will spin in one direction. If we reverse this,
+the motor will spin in reverse.
+
+```{figure} img/L293D_pinout.svg
+:align: center
+:alt: L293D Motor Driver Pinout
+:label: fig-l293d
+Pinout of the L293D motor driver. The L293D has two channels, each of which can control a DC motor. Each channel has two input pins (IN1 and IN2 for channel 1, IN3 and IN4 for channel 2) that control the direction of the motor, and an enable pin (EN1 for channel 1, EN2 for channel 2) that turns the motor on and off.
+```
+
+### Wiring up the motor.
+To control a fan using the L293D, we will connect the fan to one of the channels of the L293D. We will connect the enable pin to 5V so that the output is always enabled. We will connect the input pins to GPIO pins on the microcontroller so that we can control the direction of the motor. The ground of the L293D should be connected to the ground of the microcontroller, and the power pins should be connected to 5V.
+
+We will also connect a {term}`capacitor` across the motor wires to help reduce
+electrical noise generated by the motor. A 100nF ceramic capacitor is a good
+choice for this (marked with 104). Because the motor spins using magnetic
+forces, this can cause fluctuations in the voltage (ripple or spikes) that can
+interfere with other electrical signals. A capacitor helps to smooth these out.
+
+Components you will need:
+* Breadboard
+* L293D motor driver
+* DC fan (5V)
+* 100nF ceramic capacitor (marked with 104)
+* Jumper wires
+
+Wire up the components as shown in @fig-l293d-fan. The fan is connected to OUT1 and OUT2 of the L293D. The enable pin EN1 is connected to 5V. The input pins IN1 and IN2 are connected to GPIO pins 32 and 33, respectively.
+
+```{figure} img/fig-h-bridge-motor.png
+:align: center
+:alt: L293D Motor Driver with Fan
+:label: fig-l293d-fan
+A circuit with an L293D motor driver controlling a DC fan. The fan is connected to OUT1 and OUT2 of the L293D. The enable pin EN1 is connected to 5V. The input pins IN1 and IN2 are connected to GPIO pins 32 and 33, respectively. A 100nF ceramic capacitor is connected across the motor wires to help reduce electrical noise generated by the motor.
+```
+
+### Writing the Code
+Let's write some code to control the fan. We will show this in isolation first, to give you a clean example.
+
+```{code-block} python
+:linenos:
+import machine
+import time
+
+# create Pin objects for the motor control pins
+motor1 = machine.Pin(32, machine.Pin.OUT)
+motor2 = machine.Pin(33, machine.Pin.OUT)
+
+# loop forever
+while True:
+    # turn on the motor in one direction
+    motor1.on()   # IN1 high
+    motor2.off()  # IN2 low
+    time.sleep(1)
+
+    # turn on the motor in the other direction
+    motor1.off()  # IN1 low
+    motor2.on()   # IN2 high
+    time.sleep(1)
+```
+This code will turn the motor on in one direction for 1 second, then reverse the
+direction for 1 second, and repeat this indefinitely. You should see the fan
+spin in one direction, then reverse and spin in the other direction. One
+direction should push air, while the other direction pulls air.
+
+:::{warning}
+
+The fan uses a lot of current, so the USB connection to the ESP32 is likely
+insufficient to power everything. You may need to wire in a separate 5V power
+supply to power the fan and the L293D. Make sure to connect the ground of the
+separate power supply to the ground of the ESP32. If your ESP32 kit has a
+lithium battery connector, you can use this.
+
+:::
+
+:::{note}
+
+Even with the capacitor to reduce electrical noise, you may still see some strange behavior. Some USB connections are more finicky than others (e.g., the authors had trouble connecting the ESP32 directly to an Apple MacBook Air while running the fan) and might disconnect when the fan turns on.
+
+Two possible solutions to this are to use a powered USB hub between the ESP32 or
+reduce the input voltage to the L293D to 3.3V. This will make the fan spin more
+slowly, but it also reduces the current draw and ripple.
+
+:::
+
+### Varying the Speed of the Fan
+As with many other components, we can vary the speed of the fan by using a
+technique called *pulse width modulation* (PWM). Recall that this technique
+turns a pin on and off repeatedly to produce a "dimming" effect. With a motor controller, it is important to use a very high frequency for the PWM signal, such as 20KHz, otherwise you may hear a high-pitched whine coming from the motor. The L293D can handle PWM signals on the input pins, so we can use the `PWM` class from the `machine` module to generate a PWM signal on the input pins.
+
+```{code-block} python
+:linenos:
+import machine
+import time
+
+# create PWM objects for the motor control pins
+motor1 = machine.PWM(machine.Pin(32))  # IN1
+motor2 = machine.PWM(machine.Pin(33))  # IN2
+
+# set frequency to 20KHz
+motor1.freq(20000)  
+motor2.freq(20000)
+
+# slowly turn the fan on
+duty = 0
+while duty <= 1023:
+    motor1.duty(duty)  # IN1 duty cycle
+    motor2.duty(0)     # IN2 off
+    duty += 10
+    time.sleep_ms(100)
+```
+
+:::{exercise}
+:label: ex-fan-control
+Modify the code from the previous section to turn on the fan when the button is
+pressed or when the temperature exceeds 25 degrees Celsius. The fan should turn off when the button is not pressed and the temperature is below 25 degrees Celsius.
+:::
+
+
 ## Additional Exercises
 
 :::{exercise}
