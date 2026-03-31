@@ -103,6 +103,9 @@ global variable
 hexadecimal
 : a number system based on sixteen digits (0-9 and A-F), often used in computing as a more compact representation of binary data
 
+immutable
+: a type of data that cannot be changed after it is created (e.g., strings and tuples in Python)
+
 integer
 : a whole number (i.e., no decimal point)
 
@@ -123,6 +126,9 @@ microcontroller
 
 module
 : a file containing Python code (functions, variables, etc.) that can be imported and used
+
+mutable
+: a type of data that can be changed after it is created (e.g., lists in Python)
 
 operating system
 : software that manages computer hardware and software resources and provides common services for computer programs. Common examples include Windows, macOS, Linux, iOS, and Android
@@ -165,6 +171,9 @@ thermistor
 
 truth table
 : enumerates all possible outcomes of a logical operator for all possible inputs
+
+tuple
+: an ordered collection of values that can be of different types, defined using parentheses and separated by commas
 
 variable
 : a named location in memory that can hold a value which may change during the execution of a program
