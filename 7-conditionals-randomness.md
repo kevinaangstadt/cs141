@@ -726,6 +726,143 @@ Modify the code from the previous section to turn on the fan when the button is
 pressed or when the temperature exceeds 25 degrees Celsius. The fan should turn off when the button is not pressed and the temperature is below 25 degrees Celsius.
 :::
 
+## Measuring Distance
+Did you know that it is possible to measure distance using sound? This is the
+principle behind *echolocation*, which is used by bats and dolphins to navigate
+and find food. We can use a similar principle to measure distance using an
+ultrasonic sensor. An *ultrasonic* sensor emits a high-frequency sound wave and
+measures the time it takes for the sound wave to bounce off an object and return
+to the sensor. By knowing the speed of sound, we can calculate the distance to
+the object.
+
+Ultrasonic means that the sound is above the range of human hearing, which is typically around 20KHz.
+
+The `HC-SR04` ultrasonic sensor is a very common and inexpensive ultrasonic
+sensor that is capable of measuring distances from 2cm to 400cm with an accuracy
+of about 2-3mm. This sensor must be powered by 5V, and it has two control pins: a trigger pin and an echo pin.
+
+To measure a distance, the sensor waits for a 10 microsecond pulse on the
+trigger pin. When it receives this pulse, it emits an ultrasonic burst of 8
+pulses at 40KHz (above the human hearing range). Then, it listens for the echo
+to return and times how long this takes. The echo pin then goes high for the
+duration of the time it took for the echo to return.
+
+Sound travels at 343.2 meters per second, and we can use this to calculate the distance traveled by the ultrasonic waves. Keep in mind that the sound has to travel *to the object and back*, so the distance to the object is half of the total distance traveled by the sound. Therefore, assuming we measure the pulse time in microseconds, the formula to calculate the distance to the object (in centimeters) is:
+
+$$\text{distance cm} = \frac{1}{2} \times \text{duration } \mu\text{s} \times \frac{343.2 \text{ m}}{1 \text{ s}} \times \frac{100 \text{ cm}}{1 \text{ m}} \times \frac{1 \text{ s}}{1000000 \mu\text{s}}$$
+
+### Measuring the Echo Pulse Duration
+MicroPython has a built-in function `machine.time_pulse_us(pin, value, timeout)`
+that can be used to measure the duration of a pulse on a pin. This function
+waits for the pin to go to the specified value (0 or 1) and then measures how
+long it stays at that value. The `timeout` parameter specifies how long to wait
+for the pulse before giving up and returning -2. The timeout also specifies how
+long to wait for the pulse to end before giving up and returning -1. Thus, we
+can use this function to measure the duration of the echo pulse.
+
+We just need to choose a suitable timeout value. Since we are measuring
+distances up to 400cm, we can calculate the maximum time it would take for an
+echo to return from an object a bit further away.
+
+:::{exercise}
+:label: ex-echo-duration
+How long would it take an ultrasonic pulse to travel to an object 500cm away and
+ back?
+:::
+:::{solution} ex-echo-duration
+We can calculate this by adapting our formula for measuring distance from time:
+
+$$ 
+\begin{aligned}
+ \text{duration } \mu\text{s} &= 2 \times 500 \text{ cm} \times \frac{1 \text{ m}}{100 \text{ cm}} \times \frac{1 \text{ s}}{343.2 \text{ m}} \times \frac{1 \text{ s}}{1000000 \;\mu\text{s}} \\
+&= 23310 \;\mu\text{s}
+\end{aligned}
+$$
+:::
+
+Based on our finding in {ref}`ex-echo-duration`, we can choose a timeout greater than 23,310 microseconds (say 30,000 microseconds) to be safe.
+
+### Wiring up the Ultrasonic Sensor
+
+Let's wire up the ultrasonic sensor to the ESP32. 
+
+Components you will need:
+* Breadboard
+* HC-SR04 ultrasonic sensor
+* LCD (optional, for displaying the distance)
+* Jumper wires
+
+Wire up the components as shown in @fig-lcd-sonar. The VCC pin of the sensor
+should be connected to 5V, and the GND pin should be connected to ground. The
+trigger pin can be connected to GPIO pin 26, and the echo pin can be connected
+to GPIO pin 25.
+
+```{figure} img/fig-lcd-sonar.png
+:align: center
+:alt: LCD and Ultrasonic Sensor Circuit
+:label: fig-lcd-sonar
+A circuit with a 16x2 LCD and an HC-SR04 ultrasonic sensor. The ultrasonic sensor is connected to the ESP32 with the trigger pin connected to GPIO pin 26 and the echo pin connected to GPIO pin 25. The LCD is connected to the I2C bus using GPIO pins 21 and 22. This image was created using [Fritzing](http://fritzing.org/).
+``` 
+
+### Writing the Code
+Now, we can write the code to measure the distance using the ultrasonic sensor. We will create a function, `distance`, that takes the trigger and echo pins as parameters and returns the distance to the nearest object in centimeters.
+
+```{code-block} python
+:linenos:
+def distance(trigger_pin, echo_pin):
+    """
+    Measure the distance to the nearest object using an HC-SR04 ultrasonic sensor.
+    :param trigger_pin: a Pin object connected to the trigger pin of the sensor
+    :param echo_pin: a Pin object connected to the echo pin of the sensor
+    :return: the distance to the nearest object in centimeters
+    """
+    # turn off the trigger pin and wait for 2 microseconds
+    trigger_pin.off()
+    time.sleep_us(2)
+
+    # send a 10 microsecond pulse on the trigger pin
+    trigger_pin.on()
+    time.sleep_us(10)
+    trigger_pin.off()
+
+    # measure the duration of the echo pulse
+    # the second argument, 1, means we are waiting for a high pulse
+    duration = machine.time_pulse_us(echo_pin, 1, 30000)
+
+    # if there is a timeout, the duration will be negative
+    if duration < 0:
+        return 500  # return a large distance if there is a timeout
+    
+    # convert duration to distance in cm
+    return duration * 343.2 * 100 / 1000000 / 2  
+```
+
+The main program that uses this function to measure the distance and print it to
+the LCD is shown below.
+
+```{code-block} python
+:linenos:
+import machine
+import time
+
+import lcd_i2c
+
+# set up the LCD
+i2c = machine.I2C(1, sda=machine.Pin(21), scl=machine.Pin(22))
+lcd = lcd_i2c.LCD(0x27, 16, 2, i2c=i2c)
+lcd.begin()
+
+# set up the ultrasonic sensor pins
+trigger = machine.Pin(26, machine.Pin.OUT)
+echo = machine.Pin(25, machine.Pin.IN)
+
+while True:
+    dist = distance(trigger, echo)
+    lcd.clear()
+    lcd.print(f"Distance: {round(dist, 2)}")
+    time.sleep(1)
+```
+
 
 ## Additional Exercises
 
