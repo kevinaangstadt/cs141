@@ -246,6 +246,9 @@ dotted_eighth = int(eighth * 1.5)
 # triplet notes (standard note * 2/3)
 quarter_triplet = int(half // 3)
 eighth_triplet = int(quarter // 3)
+
+# create a PWM object for the buzzer
+buzzer = machine.PWM(machine.Pin(32))
 ```
 
 It would be rather laborious, but we could now write out a program that plays a
@@ -384,14 +387,14 @@ can do this:
 
 i = 0
 while i < len(song):
-    # Get the duration and note from the current element
-    duration, note = song[i]
+    # Get the duration and pitch from the current element
+    duration, pitch = song[i]
 
-    # if the note is a rest, we need to turn off the buzzer
-    if note == note.REST:
+    # if the pitch is a rest, we need to turn off the buzzer
+    if pitch == note.REST:
         buzzer.duty(0)  # Turn off the buzzer
     else:
-        buzzer.freq(note)  # Set the frequency to the note
+        buzzer.freq(pitch)  # Set the frequency to the pitch
         buzzer.duty(511)  # Turn on the buzzer with 50%
     
     # Wait for the duration of the note
@@ -405,3 +408,32 @@ while i < len(song):
     i += 1 
 ```
 :::
+
+## Making Music
+Now, it's your turn to make some music! You can create your own song by defining
+a list of (duration, note) tuples. You can use the `note` module to access the
+frequencies of the notes and the duration constants defined in `music.py` to
+specify the durations. Try creating a simple melody or even a full song!
+
+For example, here is another classic melody:
+
+```{code-block} python
+:linenos:
+song = [
+    (quarter, note.G4), (eighth, note.REST), 
+    (eighth, note.D4), (quarter, note.G4), (eighth, note.REST), 
+    (eighth, note.D4),
+    
+    (eighth, note.G4), (eighth, note.D4), (eighth, note.G4), (eighth, note.B4),
+    (quarter, note.D5), (quarter, note.REST),
+    
+    (quarter, note.C5), (eighth, note.REST),
+    (eighth, note.A4), (quarter, note.C5), (eighth, note.REST),
+    (eighth, note.A4),
+    
+    (eighth, note.C5), (eighth, note.A4), (eighth, note.FS4), (eighth, note.A4),
+    (quarter, note.D4), (quarter, note.REST)
+]
+```
+
+Do you recognize it?
