@@ -1,4 +1,4 @@
-# Sequences of Data and Music
+# Sequences of Data, Music and Repetition
 Music is fundamental to the human experience, and the study of music as a
 mathematic science dates back to at least the ancient Greeks. In this chapter,
 we will explore how music can be represented as sequences of data, and how we
@@ -13,10 +13,10 @@ buzzers, as they allow us to create different tones by varying the frequency of
 the signal.
 
 :::{exercise}
-:label: oscillating-signal-check
+:label: ex-oscillating-signal-check
 How can we generate an oscillating signal using MicroPython?
 :::
-:::{solution} oscillating-signal-check
+:::{solution} ex-oscillating-signal-check
 We can create a `PWM` object on a pin connected to the buzzer and set its frequency and duty cycle to produce sound. 
 :::
 
@@ -366,10 +366,10 @@ song.append((half, note.C5))  # Add a new note to the end of the song
 This will add the note C5 with a duration of a half note to the end of the `song` list.
 
 :::{exercise}
-:label: list-looping
+:label: ex-list-looping
 How can we use `len()` and index access to loop through the elements of a list?
 :::
-:::{solution} list-looping
+:::{solution} ex-list-looping
 
 This is just our common counting loop structure from before. We start our
 counting at 0 and need to continue while we are less than the length of the
@@ -437,3 +437,607 @@ song = [
 ```
 
 Do you recognize it?
+
+## The `for` Loop
+Looking back at @ex-list-looping, there were a number of pieces we had to get
+correct to loop through the list of notes. We had to initialize our counter
+variable `i` to 0, we had to make sure our loop condition was correct, and we
+had to remember to increment `i` at the end of each iteration. This is a lot of
+details to keep track of, and it is easy to make a mistake that causes an
+infinite loop or an *off-by-one error*.
+
+Fortunately, Python provides a more convenient way to loop through the elements of a sequence type such as a list or tuple. This is called a `for` loop, and it allows us to iterate directly over the elements of the sequence without having to manage a counter variable. 
+
+A `for` loop has the following syntax:
+
+```{code-block} python
+:linenos:
+for variable in some_sequence_data:
+    statements
+```
+
+In the code block above, `some_sequence_data` is a value that is a sequence type
+(such as a list or tuple). There are two new MicroPython keywords `for` and
+`in`. The `for` loop will iterate through each element of `some_sequence_data`,
+and for each element, it will assign that element to the variable `variable` and
+then execute the block of statements indented under the `for` loop. `variable`
+should be thought of as a temporary variable that takes on the value of each
+element in the sequence as we iterate through it, and it really should only be
+accessed in the body of the `for` loop.
+
+Notice that we don't have to explicitly keep track of our position in the
+sequence with a counter variable, and we don't have to worry about the loop
+condition or incrementing a counter. The `for` loop takes care of all of that
+for us, which makes our code cleaner and less error-prone.
+
+We can use a `for` loop to iterate through our `song` list and play the music without having to manage a counter variable. Here is how we can do this:
+
+```{code-block} python
+:linenos:
+for note_info in song:
+    # decompose the note_info tuple into duration and pitch
+    # NOTE: you can technically decompose the tuple directly in loop header
+    (duration, pitch) = note_info
+
+    if pitch == note.REST:
+        # Turn off the buzzer
+        buzzer.duty(0)  
+    else:
+        # Set the frequency to the pitch
+        buzzer.freq(pitch)  
+        # Turn on the buzzer with 50% duty cycle
+        buzzer.duty(511)  
+    
+    time.sleep_ms(duration - 10)
+    # Turn off the buzzer to create a separation
+    buzzer.duty(0)  
+    # Wait for 10 ms before playing the next note
+    time.sleep_ms(10)  
+```
+
+### Revisiting the Counting Loop
+Recall that a very common looping pattern is a *counting loop* that iterates an
+exact number of times. Recall the pattern ...
+
+```{code-block} python
+:linenos:
+i = 0
+while i < n:
+    # loop body
+	i = i + 1
+```
+
+This loop body will execute exactly `n` times; as long as `n` is not modified in
+the loop body. This can be rewritten using a `for` loop and the built-in
+`range()` function as follows:
+
+```{code-block} python
+:linenos:
+for i in range(n):
+    # loop body
+```
+
+Observe that there is also no explicit assignment statement incrementing `i` by one. The `range(n)` function generates a sequence of integers starting from 0 up to (but not including) `n`, and the `for` loop iterates through this sequence, assigning each value to `i` in turn.
+
+```{note}
+The `range()` function does not produce a list or tuple of integers. Instead, it
+ produces a *range type*, which is used to generate an immutable sequence of 
+ integers. This is more efficient because it creates the numbers "on the fly" as
+ needed rather than storing them all in memory at once. Since it is still a 
+ sequence type, we can use it with a `for` loop to iterate through the generated
+ integers.
+```
+
+The `for`-loop below will print the integers 0 through 9, one per line.
+
+```{code-block} python
+:linenos:
+for i in range(10):
+    print(i)
+```
+
+### `for` Loop Examples
+Here is an example `for` loop that will add up the integers from 1 to 100.
+
+```{code-block} python
+:linenos:
+total = 0
+for i in range(101):
+    total = total + i
+```
+
+#### Variations on `range()`
+The `range` function can take an optional starting value. For example
+`range(10,15)` generates the sequence of integers `10, 11, 12, 13, 14` (it never
+includes the *stop* value, in this case `15`).
+
+:::{exercise}
+:label: ex-range-looping
+What is the output of the following code?
+```{code-block} python
+:linenos:
+sum = 0
+for i in range(3,8):
+    sum += i
+print(sum)
+```
+:::
+:::{solution} ex-range-looping
+The output of the code will be `25`. Because `3+4+5+6+7` is `25`.
+:::
+
+:::{exercise}
+:label: ex-range-looping-semi-reversed
+What is the output of the following code?
+```{code-block} python
+:linenos:
+sum = 0
+for i in range(8,3):
+    sum += i
+print(sum)
+```
+:::
+:::{solution} ex-range-looping-semi-reversed
+```
+0
+```
+Because the start value in the `range` function is greater-than-or-equal to the
+ stop value, the loop iterates exactly zero times.
+:::
+
+The `range` function can also take an optional *step* value as the third argument. For example, `range(10,15,2)` generates the sequence of integers `10, 12, 14`.
+
+:::{exercise}
+:label: ex-range-looping-step
+What is the output of the following code?
+```{code-block} python
+:linenos:
+sum = 0
+for i in range(3,8,2):
+    sum += i
+print(sum)
+```
+:::
+:::{solution} ex-range-looping-step
+The output of the code will be `15`. Because `3+5+7` is `15`.
+:::
+
+Step values can be negative. For example, `range(8,3,-1)` generates the sequence
+`8,7,6,5,4` (why does it not include `3`? Because the `range` function never
+includes the final *stop* value, in this case `3`).
+
+#### Calculating Averages and Medians
+`for` loops are very convenient for solving problems that involve iterating
+through a sequence of data. Let's say you have a list of grades and would like
+to calculate both the average grade and the median (middle) grade. We can do this with a `for` loop as follows:
+
+```{code-block} python
+:linenos:
+grades = [85, 92, 78, 90, 88]
+
+# Calculate the average
+total = 0
+for grade in grades:
+    total += grade
+average = total / len(grades)
+```
+
+Calculating the median requires sorting the list of grades and then finding the middle element (or the average of the two middle elements if there is an even number of grades). In MicroPython, list data has a built-in `sort()` method that we can call:
+
+```{code-block} python
+:linenos:
+:lineno-start: 9
+# Sort the list of grades in place
+grades.sort()  
+
+# Calculate the median
+n = len(grades)
+if n % 2 == 1:
+    # If there is an odd number of grades, the median is the middle element
+    median = grades[n // 2]
+else:
+    # If there is an even number of grades, the median is the average of the two
+    # middle elements
+    median = (grades[n // 2 - 1] + grades[n // 2]) / 2
+``` 
+
+#### The Birthday Paradox
+
+The *Birthday Paradox* (also called the *Birthday Problem*) is a
+counterintuitive result in probability that asks how many people need to be in a
+room for there to be a 50% chance that two people share a birthday. As is often
+the case, many of our examples seem silly, but have real applications. In the
+area of computer security there is a particular type of attack called a [*birthday attack*](https://en.wikipedia.org/wiki/Birthday_attack).  The popular
+radio show *This American Life* did an
+[episode](https://www.thisamericanlife.org/630/things-i-mean-to-know) titled
+[Fraud Complex](https://www.thisamericanlife.org/630/things-i-mean-to-know/act-one-0) where the results from the birthday paradox were used to debunk claims
+of voter fraud.[^fraud]
+
+[^fraud]: [_One Person, One Vote: Estimating the Prevalence of Double Voting in U.S. Presidential Elections_](https://5harad.com/papers/1p1v.pdf)
+
+The mathematics for solving the birthday problem, while not all that
+complicated, is beyond the scope of this text. However, writing a program to
+simulate the birthday problem is fairly straightforward.
+
+There are 366 possible birthdays (including the leap year day February 29). We
+can think of the calendar as a list of 366 integers. Call this list `birthdays`.
+The number of people in the room that share January 1 as a birthday is in
+`birthdays[0]` and the number that share December 31 is in `birthdays[365]`.
+Initially `birthdays` is initialized to all zeros.
+
+```{code-block} python
+:linenos:
+birthdays = []
+
+# Append 366 zeros to the `birthdays` list
+for i in range(366):
+    birthdays.append(0)
+```
+
+
+Python has an even simpler notation for initializing a list to all of the same
+value. The three lines of code above can be replaced with the one line:
+
+```{code-block} python
+:linenos:
+birthdays = [0]*366
+```
+
+How can we simulate someone's birthday?  Generate a random number between 0 and
+365 and increment the corresponding birthday in the `birthdays` list.
+
+```{code-block} python
+:linenos:
+import random
+
+bday = random.randrange(366)
+birthdays[bday] += 1
+```
+
+We need to do this a number of times, once for each person in the room. How many
+times? This is precisely what we are trying to figure out. Let's start with 100. 
+
+```{code-block} python
+:linenos:
+
+# Generate one hundred random birthdays
+for i in range(100):
+    bday = random.randrange(366)
+    birthdays[bday] += 1
+```
+
+How do we know if two or more people share a birthday? One of the items in the
+`birthdays` list will be greater than 1. If nobody shared a birthday then all of
+the integers in `birthdays` are either 0 or 1. By the [*pigeonhole principle*](https://en.wikipedia.org/wiki/Pigeonhole_principle) if there are 367
+people in the room then we are guaranteed that at least two people share a
+birthday. In practice though, it is much less than that.
+
+```{code-block} python
+:linenos:
+i = 0
+for count in birthdays:
+    if count > 1:
+        print(count, "birthdays on day", i)
+    i = i + 1
+```
+
+If we run this with 100 people in the room we see that lots of people share a
+birthday. (You will get different results because we are generating random
+birthdays).
+
+```
+2 birthdays on day 10
+2 birthdays on day 23
+2 birthdays on day 49
+2 birthdays on day 69
+3 birthdays on day 95
+2 birthdays on day 144
+2 birthdays on day 178
+2 birthdays on day 290
+3 birthdays on day 315
+2 birthdays on day 316
+2 birthdays on day 333
+```
+
+In fact with 100 people, you are almost guaranteed to have people share a
+birthday. With a little experimenting you can see that at about 23 people there
+is a 50% chance of two or more people sharing a birthday. It is called the
+*Birthday Paradox* because 23 *seems* like a surprisingly small number.
+
+
+### Nested `for` Loops
+
+`for` loops can be nested just like `while` loops. This is a pattern we will see
+frequently when we deal with two-dimensional data, like tables. Consider the
+code fragment below:
+
+```{code-block} python
+:linenos:
+for i in range(4):
+    for j in range(3):
+        print(i,'\t',j)
+```
+
+For each value of `i` in the *outer* `for` loop `j` will take on values `0`,`1`,
+and `2` in the *inner* `for`-loop. The output produced is:
+
+```
+0 	 0
+0 	 1
+0 	 2
+1 	 0
+1 	 1
+1 	 2
+2 	 0
+2 	 1
+2 	 2
+3 	 0
+3 	 1
+3 	 2
+```
+
+This one is slightly more tricky, but one you will see again.
+
+:::{exercise}
+:label: ex-nested-for-loop
+What is the output of the following code?
+```{code-block} python
+:linenos:
+for i in range(4):
+    for j in range(i,3):
+        print(i,'\t',j)
+```
+:::
+:::{solution} ex-nested-for-loop
+The way to think of this is that for each value `i` `j` will take on value from `i` 
+up to but not including `3`.
+```
+0 	 0
+0 	 1
+0 	 2
+1 	 1
+1 	 2
+2 	 2
+```
+:::
+
+## Additional Exercises
+
+:::{exercise}
+:label: ex-compare-triplets
+"Compare The Triplets"[^compare-the-triplets] 
+
+[^compare-the-triplets]: https://www.hackerrank.com/challenges/compare-the-triplets/problem
+
+Suppose Alice creates a programming problem for HackerRank and a reviewer rates
+the question based on clarity, originality, and difficulty where each value is
+between 1 and 100. For example the tuple `(90, 10, 50)` means the problem is
+clear (90), not very original (10), and is of medium difficulty (50).
+
+Suppose Bob also creates a problem for HackerRank with a rating of `(75,50,60)`.
+We would like to compare Alice's and Bob's problems awarding a point for each
+criteria that is greater than the other's. For example, in this case Alice's
+score is `1` because her score on clarity is greater than Bob's.  Bob's score is
+`2` because his problem is more original and harder. No point is allotted for
+values that are the same.
+
+Complete the function `compareTheTriplets` below. It must return a tuple of two
+integers, the first being Alice's score and second being Bob's. The two
+paramaters are `a`, a tuple or list of three integers that represent Alice's
+rating, and `b`, a tuple or list of three integers that represents Bob's rating.
+
+The input consists of two lines of three space separated integers. The first
+line is for Alice, and the second line is for Bob.
+
+*Sample Input 0*
+```
+5 6 7
+3 6 10
+```
+
+*Sample Output 0*
+```
+1 1
+```
+
+*Sample Input 1*
+```
+17 28 30
+99 16 8
+```
+
+*Sample Output 1*
+```
+2 1
+```
+
+```{code-block} python
+:linenos:
+def compareTheTriplets(a,b):
+    # fill in function body
+
+
+# M a i n   P r o g r a m
+
+# Don't worry about how the main program works
+
+# Test Sample Input 0
+if compareTheTriplets([5,6,7],[3,6,10]) == (1,1):
+    print("Sample Input 0 Passed")
+else:
+    print("Sample Input 0 Failed")
+
+# Test Sample Input 1
+if compareTheTriplets((17,28,30),(99,16,8)) == (2,1):
+    print("Sample Input 1 Passed")
+else:
+    print("Sample Input 1 Failed")
+
+# Try your own inputs
+a = [int(x) for x in input("Alice:").split()]
+b = [int(x) for x in input("Bob:").split()]
+print(' '.join([str(x) for x in compareTheTriplets(a,b)]))
+
+```
+:::
+
+:::{exercise}
+:label: ex-mini-max-sum
+"Mini-Max Sum"[^mini-max-sum]
+
+[^mini-max-sum]: https://www.hackerrank.com/challenges/mini-max-sum/problem
+
+Given a list of five integers find the minimum and maximum value that can be
+calculated by summing exactly four of the five values. For example, if the list
+was `[7,9,3,1,5]` the maximum would be $7 + 9 + 3 + 5 = 24$ and the minimum
+would be $7 + 3 + 1 + 5 = 16$.
+
+Complete the `miniMaxSum` function below, where `arr` is a list of five
+integers. The function should return a tuple where the first item is the minimum
+sum and the second item is the maximum sum.
+
+*Sample Input 0*
+```
+1 2 3 4 5
+```
+
+*Sample Output 0*
+```
+10 14
+```
+
+```{code-block} python
+:linenos:
+def miniMaxSum(arr):
+    # fill in function body
+
+
+# M a i n   P r o g r a m
+
+# Don't worry about how the main program works
+
+if miniMaxSum([7,9,3,1,5]) == (16,24):
+    print("Sample Test 0 Passed")
+else:
+    print("Sample Test 0 Failed")
+
+# Try your own list of numbers
+v = [int(x) for x in input("numbers: ").split()]
+print(' '.join([str(x) for x in miniMaxSum(v)]))
+```
+:::
+
+:::{exercise}
+:label: ex-two-sum
+
+Given a value `k` on one line and a list of integers on the second, complete the
+function `twoSum` below that returns `true` if two of the integers from `nums`
+add up to `k`.
+
+*Sample Input 0*
+```
+25
+4 9 33 2 16
+```
+
+*Sample Output 0*
+```
+True
+```
+
+because $9+16=25$.
+
+*Sample Input 1*
+```
+14
+4 9 33 2 16
+```
+
+*Sample Output 1*
+```
+False
+```
+
+```{code-block} python
+:linenos:
+def twoSum(nums, k):
+    # fill in function body
+
+# M a i n   P r o g r a m
+
+# Don't worry about how the main program works
+
+# Try your own inputs
+print(twoSum([4,9,33,2,16], 25))  # True
+print(twoSum([4,9,33,2,16], 14))  # False
+
+# Try your own k and list of integers
+k = int(input("k: "))
+nums = [int(x) for x in input("Numbers:").split()]
+print(twoSum(nums,k))
+```
+:::
+
+:::{exercise}
+:label: ex-product-of-others
+
+This comes from the [Daily Coding Problem](https://www.dailycodingproblem.com/) email list. 
+
+Given a list of integers, return a new list such that each element at index $i$
+of the new list is the product of all the numbers in the original list except
+the one at index $i$.
+
+For example, if our input was `[1, 2, 3, 4, 5]`, the expected output would be
+`[120, 60, 40, 30, 24]`. If our input was `[3, 2, 1]`, the expected output would
+be `[2, 3, 6]`.
+
+Follow-up: what if you can't use division?
+:::
+
+:::{exercise}
+:label: ex-staircase
+
+Conside a staircase of size `n = 4`.[^staircase]
+
+[^staircase]: This exercise is adapted from a problem on HackerRank called
+    "Staircase". You can find the original problem
+    [here](https://www.hackerrank.com/challenges/staircase/problem).
+
+```
+   #
+  ##
+ ###
+####
+```
+
+The height and width are equal to `n`. The image is drawn using `#`
+symbols and spaces. The last line does not have any spaces in it.
+
+Complete the function `staircase` below. It should print a staircase as defined
+above. The input `n` is the size of the staircase (its width and height). Assume
+`n` is greater than 0.
+
+*Sample Input 0*
+```
+n: 6
+```
+
+*Sample Output 0*
+```
+     #
+    ##
+   ###
+  ####
+ #####
+######
+```
+
+```{code-block} python
+:linenos:
+def staircase(n):
+    # fill in function body
+
+# M a i n    P r o g r a m
+staircase(int(input('n: ')))
+```
+:::
