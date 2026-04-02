@@ -641,6 +641,29 @@ else:
     median = (grades[n // 2 - 1] + grades[n // 2]) / 2
 ``` 
 
+#### Frequency Sweep
+We can use a `for` loop to create a *frequency sweep* with our buzzer. A frequency sweep is a sound that starts at a low frequency and gradually increases to a high frequency (or vice versa). This can be achieved by using a `for` loop to iterate through a range of frequencies and setting the buzzer to each frequency in turn. For example, the following code will create a frequency sweep from 20 Hz to 20,000 Hz:
+
+```{code-block} python
+:linenos:
+
+import machine
+import time
+
+# start with the buzzer off
+buzzer = machine.PWM(machine.Pin(32))
+buzzer.duty(0)
+
+for freq in range(20, 20001, 100):
+    buzzer.freq(freq)
+    buzzer.duty(511)
+    # Wait for 100 ms before changing to the next frequency 
+    time.sleep_ms(100)  
+
+# Turn off the buzzer after the sweep is complete
+buzzer.duty(0)  
+```
+
 #### The Birthday Paradox
 
 The *Birthday Paradox* (also called the *Birthday Problem*) is a
